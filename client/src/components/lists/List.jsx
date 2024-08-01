@@ -3,11 +3,11 @@ import ListItem from "./ListItem";
 import { MdDeleteOutline } from "react-icons/md";
 
 const List = (props) => {
-    const [listName, setListName] = useState(props.listName);
+    const [name, setName] = useState(props.name);
     
     return (
-        <div className="relative bg-green-600 p-4 rounded-lg flex flex-col gap-4">
-            <input type="text" value={listName} onInput={(event) => { setListName(event.target.value) }} className="font-medium text-xl underline bg-transparent focus:outline-none" />
+        <div className={`relative ${props.backgroundColor} p-4 rounded-lg flex flex-col gap-4`}>
+            <input type="text" value={name} onInput={(event) => { setName(event.target.value) }} className="font-medium text-xl underline bg-transparent focus:outline-none" />
             <ul className="flex flex-col gap-1">
                 <li className="cursor-pointer w-fit opacity-75 leading-none text-4xl">
                     +

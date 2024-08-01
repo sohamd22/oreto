@@ -7,7 +7,7 @@ import Saved from "../components/saved/Saved";
 import Lists from "../components/lists/Lists";
 import Reminders from "../components/reminders/Reminders"
 
-const Dashboard = () => {
+const Dashboard = (props) => {
     const tabComponents = {
         "chat": <Chat />,
         "emails": <Emails />,
@@ -44,7 +44,7 @@ const Dashboard = () => {
                         <MdNotifications data-key="reminders" onClick={(event) => activateTab(event)} className="cursor-pointer h-auto text-gray-600" size="1.5rem" />
                     </div>
                     <div>
-                        <button><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>
+                        <button onClick={props.logoutHandler}><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>
                     </div>
                 </div>        
                 
