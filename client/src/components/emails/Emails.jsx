@@ -3,6 +3,17 @@ import PromptInput from "../PromptInput";
 import Email from "./Email";
 
 const Emails = () => {
+    const emails = {
+        "work": [
+            <Email key="1" sender="Soham Daga" subject="You need to finish the email section by TODAY." datetime="1:52 PM" tags={[<h3 key="deadline" className="font-bold text-sm px-2 py-1 bg-red-600 rounded-md">Due Today</h3>]}  />,
+            <Email key="2" sender="Deepa Atal" subject="You need to add some sections to the form." datetime="27 Jul" tags={[<h3 key="deadline" className="font-bold text-sm px-2 py-1 bg-yellow-600 rounded-md">Due Tomorrow</h3>]} />
+        ],
+        "personal": [],
+        "financial": [],
+        "promo": []
+
+    }
+
     const [activeTab, setActiveTab] = useState('work');
 
     const activateTab = (event) => {
@@ -30,9 +41,8 @@ const Emails = () => {
                 <button data-key="promo" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-yellow-600 rounded-md opacity-40">Promo/News</button>
             </div>
 
-            <div className="flex flex-col max-h-full overflow-y-scroll overflow-x-hidden pr-5">
-                {/* <Email sender="Soham Daga" subject="You need to finish the email section by TODAY." datetime="1:52 PM" tags={[<h3 key="deadline" className="font-bold text-sm px-2 py-1 bg-red-600 rounded-md">Due Today</h3>]}  />
-                <Email sender="Deepa Atal" subject="You need to add some sections to the form." datetime="27 Jul" tags={[<h3 key="deadline" className="font-bold text-sm px-2 py-1 bg-yellow-600 rounded-md">Due Tomorrow</h3>]} /> */}
+            <div className="flex flex-col max-h-full overflow-y-auto overflow-x-hidden pr-5">
+                { emails[activeTab] }
             </div>
             
             <div className="mt-auto"></div>

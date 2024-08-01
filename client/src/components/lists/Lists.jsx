@@ -8,7 +8,7 @@ const Lists = () => {
         <div className="h-full w-full py-8 pr-12 flex flex-col gap-12">
             <h2 className="relative w-fit merriweather font-light text-3xl leading-tight tracking-wide text-gray-300 before:absolute before:h-[1px] before:w-3/4 before:bg-gradient-to-r before:from-indigo-500 before:to-violet-500 before:-bottom-2">You have <mark className="bg-transparent text-white font-normal">no lists</mark> yet.</h2>
             
-            <Masonry gutter="20px" columnsCount={3} className="max-h-full overflow-y-scroll overflow-x-hidden pr-5">
+            <Masonry gutter="20px" columnsCount={3} className="max-h-full overflow-y-auto overflow-x-hidden pr-5">
             </Masonry>
 
             <div className="mt-auto"></div>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { FaGoogle } from "react-icons/fa";
 
 const Login = (props) => {
     const [email, setEmail] = useState('');
@@ -38,7 +39,15 @@ const Login = (props) => {
                             <input required type="email" name="email" value={email} placeholder="Email" onInput={(e) => setEmail(e.target.value)} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
                             <input required type="password" name="password" value={password} placeholder="Password" onInput={(e) => setPassword(e.target.value)} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
                         </div>
-                        <button type="submit" className="w-full p-4 rounded-md bg-indigo-600 shadow-lg font-semibold text-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5">Log In</button>
+                        <div className="flex flex-col gap-4">
+                            <button type="submit" className="w-full p-4 rounded-md bg-indigo-600 shadow-lg font-semibold text-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5">Log In</button>
+                            <div className="flex opacity-40 gap-4 items-center">
+                                <hr className="flex-grow" />
+                                <span className="text-sm tracking-wide">or login with</span>
+                                <hr className="flex-grow" />
+                            </div>
+                            <button type="submit" className="flex justify-center items-center gap-4 w-full p-4 rounded-md border border-gray-400 shadow-lg font-medium text-lg transition-all duration-200 hover:-translate-y-0.5"><FaGoogle /> Google</button>
+                        </div>
                     </form>
                 </div>                
             </div>
