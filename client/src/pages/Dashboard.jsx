@@ -7,13 +7,6 @@ import Saved from "../components/saved/Saved";
 import Lists from "../components/lists/Lists";
 
 const Dashboard = (props) => {
-    const tabComponents = {
-        "chat": <Chat />,
-        "emails": <Emails />,
-        "lists": <Lists />,
-        "saved": <Saved />,
-    }
-
     const [activeTab, setActiveTab] = useState("chat");
 
     const activateTab = (selectedTab) => {
@@ -28,6 +21,13 @@ const Dashboard = (props) => {
         selectedTabIcon.classList.remove("text-gray-600");
         selectedTabIcon.classList.add("text-indigo-300");
         setActiveTab(selectedTab);
+    }
+
+    const tabComponents = {
+        "chat": <Chat activateTab={activateTab} />,
+        "emails": <Emails />,
+        "lists": <Lists />,
+        "saved": <Saved />,
     }
 
     return (

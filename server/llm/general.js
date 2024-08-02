@@ -8,14 +8,26 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
 // Function Calling
-const functions = {
+const activateTabFunctionDeclaration = {
+  name: "activateTab",
+  parameters: {
+    type: "OBJECT",
+    description: "Select a tab to activate.",
+    properties: {
+      tab: {
+        type: "STRING",
+        description: "Name of the tab to activate which can be `emails` to work with emails, `lists` to work with lists, or `saved` to worked with saved bookmarks and other saved data.",
+      },
+    },
+    required: ["tab"],
+  },
 };
 
 const generativeModel = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
 
   tools: {
-    functionDeclarations: [],
+    functionDeclarations: [activateTabFunctionDeclaration],
   },
 });
 
@@ -24,17 +36,10 @@ const chat = generativeModel.startChat();
 const responseHandler = async (prompt) => {
     const result = await chat.sendMessage(prompt);
 
-    const call = result.response.functionCalls()[0];
+    const call = result.response.functionCalls() ? result.response.functionCalls()[0] : null;
 
     if (call) {
-      const apiResponse = await functions[call.name](call.args);
-
-      const result2 = await chat.sendMessage([{functionResponse: {
-        name: '',
-        response: apiResponse
-      }}]);
-
-      return result2;
+      return {name: call.name, args: call.args};
     }
 
     return "Sorry, there was an error."

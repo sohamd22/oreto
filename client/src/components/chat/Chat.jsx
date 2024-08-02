@@ -4,11 +4,15 @@ import Response from "./Response";
 import PromptInput from "../PromptInput";
 import Reminder from "./Reminder";
 
-const Chat = () => {
+const Chat = (props) => {
     const hourOfDay = (new Date()).getHours();
     const timeOfDay = hourOfDay < 12 ? "Morning" : (hourOfDay < 17 ? "Afternoon" : "Evening");
 
     const [response, setResponse] = useState('');
+
+    const functions = {
+        activateTab: ({ tab }) => { props.activateTab(tab) },
+    }
 
     const promptHandler = async (event, prompt, setPrompt) => {
         event.preventDefault();
@@ -18,13 +22,16 @@ const Chat = () => {
 
         if (data) {
             setPrompt('');
-
             const textArea = document.querySelector("textarea");
-            console.log(textArea.scrollHeight);
             textArea.style.height = `${textArea.scrollHeight}px`;
             textArea.style.height = 'inherit';
-            
-            setResponse(data);
+
+            if (typeof data == 'object') {
+                functions[data.name](data.args);
+            }
+            else {
+                setResponse(data);
+            }            
         }
     }
 
