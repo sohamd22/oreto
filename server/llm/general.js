@@ -16,18 +16,33 @@ const activateTabFunctionDeclaration = {
     properties: {
       tab: {
         type: "STRING",
-        description: "Name of the tab to activate which can be `emails` to work with emails, `lists` to work with lists, or `saved` to worked with saved bookmarks and other saved data.",
+        description: "Name of the tab to activate which can be `emails` to work with emails, `lists` to work with lists (only if they are todo lists), or `saved` to worked with saved bookmarks and other saved data.",
       },
     },
     required: ["tab"],
   },
 };
 
+const defaultFunctionDeclaration = {
+  name: "default",
+  parameters: {
+    type: "OBJECT",
+    description: "Give a response to the user's prompt.",
+    properties: {
+      response: {
+        type: "STRING",
+        description: "Your response to the user's prompt as an AI assistant named Oreto.",
+      },
+    },
+    required: ["response"],
+  },
+}
+
 const generativeModel = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
 
   tools: {
-    functionDeclarations: [activateTabFunctionDeclaration],
+    functionDeclarations: [activateTabFunctionDeclaration, defaultFunctionDeclaration],
   },
 });
 

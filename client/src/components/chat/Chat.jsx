@@ -12,6 +12,7 @@ const Chat = (props) => {
 
     const functions = {
         activateTab: ({ tab }) => { props.activateTab(tab) },
+        default: ({ response }) => { setResponse(response) },
     }
 
     const promptHandler = async (event, prompt, setPrompt) => {
@@ -26,12 +27,7 @@ const Chat = (props) => {
             textArea.style.height = `${textArea.scrollHeight}px`;
             textArea.style.height = 'inherit';
 
-            if (typeof data == 'object') {
-                functions[data.name](data.args);
-            }
-            else {
-                setResponse(data);
-            }            
+            functions[data.name](data.args);
         }
     }
 
