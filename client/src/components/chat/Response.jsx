@@ -3,7 +3,7 @@ import { MdThumbUp, MdThumbDown } from "react-icons/md";
 const Response = (props) => {
     const displayRows = [];    
     if (props.content) {
-        const lines = props.content.trim().split('\n');
+        const lines = props.content.trim().replace('\\', '').split('\n');
         
         lines.forEach(line => {
             displayRows.push(<span>{line}<br /></span>);

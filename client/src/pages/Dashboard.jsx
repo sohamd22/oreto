@@ -3,7 +3,6 @@ import { PiChatTeardropTextFill, PiListDashesFill } from "react-icons/pi";
 import { MdEmail, MdBookmark, MdLogout } from "react-icons/md";
 import Chat from "../components/chat/Chat";
 import Emails from "../components/emails/Emails";
-import Saved from "../components/saved/Saved";
 import Lists from "../components/lists/Lists";
 
 const Dashboard = (props) => {
@@ -23,11 +22,12 @@ const Dashboard = (props) => {
         setActiveTab(selectedTab);
     }
 
+    const [lists, setLists] = useState([]);
+
     const tabComponents = {
-        "chat": <Chat activateTab={activateTab} />,
+        "chat": <Chat activateTab={activateTab} lists={lists} setLists={setLists} />,
         "emails": <Emails />,
-        "lists": <Lists />,
-        "saved": <Saved />,
+        "lists": <Lists lists={lists} setLists={setLists} />,
     }
 
     return (
@@ -38,7 +38,6 @@ const Dashboard = (props) => {
                         <PiChatTeardropTextFill data-key="chat" onClick={() => activateTab("chat")} className="cursor-pointer h-auto text-indigo-300" size="1.5rem" />
                         <MdEmail data-key="emails" onClick={() => activateTab("emails")} className="cursor-pointer h-auto text-gray-600" size="1.5rem" />
                         <PiListDashesFill data-key="lists" onClick={() => activateTab("lists")} className="cursor-pointer h-auto text-gray-600" size="1.5rem" />
-                        <MdBookmark data-key="saved" onClick={() => activateTab("saved")} className="cursor-pointer h-auto text-gray-600" size="1.5rem" />
                     </div>
                     <div>
                         <button onClick={props.logoutHandler}><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>

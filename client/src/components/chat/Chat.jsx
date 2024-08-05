@@ -3,6 +3,7 @@ import { useState } from "react";
 import Response from "./Response";
 import PromptInput from "../PromptInput";
 import Reminder from "./Reminder";
+import List from "../lists/List";
 
 const Chat = (props) => {
     const hourOfDay = (new Date()).getHours();
@@ -12,7 +13,13 @@ const Chat = (props) => {
 
     const functions = {
         activateTab: ({ tab }) => { props.activateTab(tab) },
-        default: ({ response }) => { setResponse(response) },
+        createList: ({name, items, backgroundColor}) => {
+                backgroundColor = `bg-${backgroundColor}-600`;
+                items = JSON.parse(items.replace('\\', ''));
+                props.activateTab('lists');
+                props.setLists([<List key={name} name={name} items={items} backgroundColor={backgroundColor} />, ...props.lists]);
+            },
+        displayResponse: ({ response }) => { setResponse(response) },
     }
 
     const promptHandler = async (event, prompt, setPrompt) => {
@@ -28,6 +35,9 @@ const Chat = (props) => {
             textArea.style.height = 'inherit';
 
             functions[data.name](data.args);
+        }
+        else {
+            setResponse("Sorry, there was an error.");
         }
     }
 
