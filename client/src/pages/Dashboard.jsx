@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { PiChatTeardropTextFill, PiListDashesFill } from "react-icons/pi";
-import { MdEmail, MdBookmark, MdLogout } from "react-icons/md";
+import { MdEmail, MdLogout } from "react-icons/md";
 import Chat from "../components/chat/Chat";
 import Emails from "../components/emails/Emails";
 import Lists from "../components/lists/Lists";
 
-const Dashboard = (props) => {
+const Dashboard = ({ logoutHandler }) => {
     const [activeTab, setActiveTab] = useState("chat");
 
     const activateTab = (selectedTab) => {
@@ -40,7 +41,7 @@ const Dashboard = (props) => {
                         <PiListDashesFill data-key="lists" onClick={() => activateTab("lists")} className="cursor-pointer h-auto text-gray-600" size="1.5rem" />
                     </div>
                     <div>
-                        <button onClick={props.logoutHandler}><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>
+                        <button onClick={logoutHandler}><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>
                     </div>
                 </div>        
                 
@@ -48,6 +49,10 @@ const Dashboard = (props) => {
             </div>
         </section>
     );
+}
+
+Dashboard.propTypes = {
+    logoutHandler: PropTypes.func.isRequired
 }
 
 export default Dashboard;

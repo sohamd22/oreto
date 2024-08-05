@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { FaGoogle } from "react-icons/fa";
 
-const Login = (props) => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -16,8 +16,6 @@ const Login = (props) => {
 
         const data = response.data;
         console.log(data);
-
-        // props.setUser(email);
     }
 
     return (

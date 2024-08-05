@@ -1,7 +1,8 @@
 import { useState } from "react"; 
+import PropTypes from "prop-types";
 
-const ListItem = (props) => {
-    const [content, setContent] = useState(props.content);
+const ListItem = ({ content }) => {
+    const [value, setValue] = useState(content);
 
     const checkboxHandler = (event) => {
         const listItem = event.target.parentNode;
@@ -18,9 +19,13 @@ const ListItem = (props) => {
     return (
         <li className="flex gap-2">
             <input type="checkbox" className="cursor-pointer" onClick={(event) => {checkboxHandler(event)}} />
-            <input type="text" value={content} onInput={(event) => { setContent(event.target.value) }} className="bg-transparent focus:outline-none" />
+            <input type="text" value={value} onInput={(event) => { setValue(event.target.value) }} className="bg-transparent focus:outline-none" />
         </li>
     );
+}
+
+ListItem.propTypes = {
+    content: PropTypes.string
 }
 
 export default ListItem;

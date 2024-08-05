@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard';
 function App() {
   const [user, setUser] = useState('Soham');
 
-  const logoutHandler = (event) => {
+  const logoutHandler = () => {
     setUser('');
   }
 
@@ -16,7 +16,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/signup' element={user ? <Navigate replace to="/dashboard" /> : <Signup />} />
-        <Route path='/login' element={user ? <Navigate replace to="/dashboard" /> : <Login setUser={setUser} />} />
+        <Route path='/login' element={user ? <Navigate replace to="/dashboard" /> : <Login />} />
         <Route path='/dashboard' element={user ? <Dashboard logoutHandler={logoutHandler} /> : <Navigate replace to="/login" />} /> 
       </Routes>
     </BrowserRouter>

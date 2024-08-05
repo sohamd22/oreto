@@ -1,9 +1,10 @@
+import PropTypes from "prop-types";
 import { MdThumbUp, MdThumbDown } from "react-icons/md";
 
-const Response = (props) => {
+const Response = ({ content }) => {
     const displayRows = [];    
-    if (props.content) {
-        const lines = props.content.trim().replace('\\', '').split('\n');
+    if (content) {
+        const lines = content.trim().replace('\\', '').split('\n');
         
         lines.forEach(line => {
             displayRows.push(<span>{line}<br /></span>);
@@ -11,7 +12,7 @@ const Response = (props) => {
     }
 
     return (
-        props.content
+        content
         ?
         <div className="max-h-full overflow-x-hidden flex gap-5">
             <img src="/images/oreto-profile.png" alt="Oreto" className="aspect-square h-12 rounded-full border-2 border-gray-400" />
@@ -29,6 +30,10 @@ const Response = (props) => {
         :
         <></>
     );
+}
+
+Response.propTypes = {
+    content: PropTypes.string
 }
 
 export default Response;

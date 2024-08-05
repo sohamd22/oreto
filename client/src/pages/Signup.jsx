@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { VscEye } from "react-icons/vsc";
 import { FaGoogle } from "react-icons/fa";
 
 const Signup = () => {
