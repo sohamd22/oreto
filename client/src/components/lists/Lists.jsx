@@ -27,7 +27,7 @@ const Lists = ({ lists, setLists }) => {
 
 Lists.propTypes = {
     lists: PropTypes.array.isRequired,
-    setLists: PropTypes.array.isRequired
+    setLists: PropTypes.func.isRequired
 }
 
 export default Lists;

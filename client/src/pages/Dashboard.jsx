@@ -1,14 +1,39 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 import { PiChatTeardropTextFill, PiListDashesFill } from "react-icons/pi";
 import { MdEmail, MdLogout } from "react-icons/md";
+
 import Chat from "../components/chat/Chat";
 import Emails from "../components/emails/Emails";
 import Lists from "../components/lists/Lists";
 
-const Dashboard = ({ logoutHandler }) => {
-    const [activeTab, setActiveTab] = useState("chat");
+const Dashboard = () => {
+    const navigate = useNavigate();
+    const [cookies, removeCookie] = useCookies([]);
+    const [name, setName] = useState("");
+    useEffect(() => {
+        const verifyCookie = async () => {
+            if (!cookies.token) {
+                navigate("/login");
+            }
+            const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
+            const { status, user } = data;
+            setName(user);
 
+            return status ? console.log(`Hello ${user}`) : (removeCookie("token"), navigate("/login"));
+        };
+        verifyCookie();
+    }, [cookies, navigate, removeCookie]);
+
+    const Logout = () => {
+        removeCookie("token");
+        navigate("/login");
+    };
+
+    const [activeTab, setActiveTab] = useState("chat");
     const activateTab = (selectedTab) => {
         const selectedTabIcon = document.querySelector(`[data-key="${selectedTab}"]`);
         const tabIcons = Array.from(document.getElementById("tabs").children);
@@ -26,7 +51,7 @@ const Dashboard = ({ logoutHandler }) => {
     const [lists, setLists] = useState([]);
 
     const tabComponents = {
-        "chat": <Chat activateTab={activateTab} lists={lists} setLists={setLists} />,
+        "chat": <Chat name={name} activateTab={activateTab} lists={lists} setLists={setLists} />,
         "emails": <Emails />,
         "lists": <Lists lists={lists} setLists={setLists} />,
     }
@@ -41,7 +66,7 @@ const Dashboard = ({ logoutHandler }) => {
                         <PiListDashesFill data-key="lists" onClick={() => activateTab("lists")} className="cursor-pointer h-auto text-gray-600" size="1.5rem" />
                     </div>
                     <div>
-                        <button onClick={logoutHandler}><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>
+                        <button onClick={Logout}><MdLogout className="cursor-pointer h-auto text-red-500" size="1.5rem" /></button>
                     </div>
                 </div>        
                 
@@ -49,10 +74,6 @@ const Dashboard = ({ logoutHandler }) => {
             </div>
         </section>
     );
-}
-
-Dashboard.propTypes = {
-    logoutHandler: PropTypes.func.isRequired
 }
 
 export default Dashboard;

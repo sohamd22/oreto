@@ -177,4 +177,4 @@ const responseHandler = async (prompt) => {
     }
 }
 
-export default responseHandler;
+export { responseHandler };

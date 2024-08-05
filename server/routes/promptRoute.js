@@ -1,5 +1,5 @@
-import responseHandler from "../llm/general.js";
 import express from 'express';
+import { responseHandler } from '../controllers/promptController.js';
 
 const router = express.Router();
 

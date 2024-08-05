@@ -1,22 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+
 import { FaGoogle } from "react-icons/fa";
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const [cookies, removeCookie] = useCookies([]);
+    useEffect(() => {
+        const verifyCookie = async () => {
+            if (cookies.token) {
+                navigate("/");
+            }
+        };
+        verifyCookie();
+    }, [cookies, navigate, removeCookie]);
 
-    const loginHandler = async (event) => {
-        event.preventDefault();
-
-        const response = await axios.post("http://localhost:3000/users/login", {
-            email,
-            password
+    const [inputValue, setInputValue] = useState({
+        email: "",
+        password: "",
+    });
+    const { email, password } = inputValue;
+    const handleOnInput = (e) => {
+        const { name, value } = e.target;
+        setInputValue({
+        ...inputValue,
+        [name]: value,
         });
+    };
 
-        const data = response.data;
-        console.log(data);
-    }
+    const handleError = (err) => console.error(err);
+    const handleSuccess = (msg) => console.log(msg);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const { data } = await axios.post("http://localhost:3000/login", { ...inputValue }, { withCredentials: true });
+
+            const { success, message } = data;
+            if (success) {
+                handleSuccess(message);
+                setTimeout(() => {
+                    navigate("/");
+                }, 1000);
+            } else {
+                handleError(message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        setInputValue({
+            ...inputValue,
+            email: "",
+            password: "",
+        });
+    };
 
     return (
         <section className="container h-svh flex justify-center items-center overflow-hidden">
@@ -29,13 +70,13 @@ const Login = () => {
                 <div className="flex flex-col gap-12 py-8">
                     <div className="flex flex-col gap-4">
                         <h1 className="merriweather text-5xl leading-tight">Make life online <mark className="bg-gradient-to-br from-indigo-600 to-violet-600 text-white">easier</mark>.</h1>
-                        <p className="text-lg text-gray-300">Don&apos;t have an account? <a href="/signup" className="underline text-indigo-300">Sign up</a></p>
+                        <p className="text-lg text-gray-300">Don&apos;t have an account? <Link to="/signup" className="underline text-indigo-300">Sign up</Link></p>
                     </div>
 
-                    <form action="https://localhost:3000/users/login" method='POST' onSubmit={(event) => loginHandler(event)} className="flex flex-col gap-12">
+                    <form action="https://localhost:3000/login" method='POST' onSubmit={handleSubmit} className="flex flex-col gap-12">
                         <div className="flex flex-col gap-6 text-base">
-                            <input required type="email" name="email" value={email} placeholder="Email" onInput={(e) => setEmail(e.target.value)} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
-                            <input required type="password" name="password" value={password} placeholder="Password" onInput={(e) => setPassword(e.target.value)} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
+                            <input required type="email" name="email" value={email} placeholder="Email" onInput={handleOnInput} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
+                            <input required type="password" name="password" value={password} placeholder="Password" onInput={handleOnInput} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
                         </div>
                         <div className="flex flex-col gap-4">
                             <button type="submit" className="w-full p-4 rounded-md bg-indigo-600 shadow-lg font-semibold text-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5">Log In</button>
