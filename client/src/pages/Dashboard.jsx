@@ -1,4 +1,5 @@
 import axios from "axios";
+import { googleLogout } from "@react-oauth/google";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -28,6 +29,7 @@ const Dashboard = () => {
     }, [cookies, navigate, removeCookie]);
 
     const Logout = () => {
+        googleLogout();
         removeCookie("token");
         navigate("/login");
     };

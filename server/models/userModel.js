@@ -13,7 +13,10 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+    },
+    google: {
+        id: String,
+        email: String,
     },
     createdAt: {
         type: Date,
@@ -22,7 +25,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function () {
-    this.password = await bcrypt.hash(this.password, 12);
+    if (this.password) {
+        this.password = await bcrypt.hash(this.password, 12);
+    }
 });
 
 export default mongoose.model("User", userSchema);
