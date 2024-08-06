@@ -4,9 +4,9 @@ import { userVerification } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+router.post("/", userVerification);
 router.post("/signup", Signup);
 router.post("/login", Login);
 router.post("/google-auth", GoogleAuth);
-router.post("/", userVerification);
 
 export default router;

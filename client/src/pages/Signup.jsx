@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from "react-router-dom";
@@ -73,9 +73,9 @@ const Signup = () => {
         });
     }
 
-    const handleGoogleAuth = async ({ credential }) => {   
+    const handleGoogleAuth = async ({ code }) => {   
         try {
-            const { data } = await axios.post("http://localhost:3000/google-auth", { credential }, { withCredentials: true, credentials: 'include' });
+            const { data } = await axios.post("http://localhost:3000/google-auth", { code }, { withCredentials: true });
     
             const { success, message } = data;
             if (success) {
@@ -91,6 +91,10 @@ const Signup = () => {
             console.log(error);
         }
     }
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: handleGoogleAuth,
+        flow: 'auth-code',
+      });
 
     return (
         <section className="container h-svh flex justify-center items-center overflow-hidden">
@@ -128,7 +132,7 @@ const Signup = () => {
                             <span className="text-sm tracking-wide">or register with</span>
                             <hr className="flex-grow" />
                         </div>
-                        <GoogleLogin onSuccess={handleGoogleAuth} onError={() => {console.error("Error")}} />
+                        <button onClick={handleGoogleLogin} className="w-full flex gap-2 justify-center items-center p-4 rounded-md border border-gray-400 text-gray-200 shadow-lg font-medium text-lg transition-all duration-200 hover:-translate-y-0.5 hover:border-white hover:text-white"><FaGoogle size="1.125rem"/>Google</button>
                     </div>
                 </div>                
             </div>
@@ -136,7 +140,5 @@ const Signup = () => {
         </section>        
     );
 }
-
-// <button className="w-full flex gap-2 justify-center items-center p-4 rounded-md border border-gray-400 text-gray-200 shadow-lg font-medium text-lg transition-all duration-200 hover:-translate-y-0.5 hover:border-white hover:text-white"><FaGoogle size="1.125rem"/>Google</button>
 
 export default Signup;

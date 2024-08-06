@@ -1,7 +1,11 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import { createSecretToken } from "../utils/secretToken.js";
+import { OAuth2Client } from "google-auth-library";
 import { jwtDecode } from 'jwt-decode';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const Signup = async (req, res, next) => {
   try {
@@ -59,10 +63,16 @@ const Login = async (req, res, next) => {
   }
 }
 
+const oAuth2Client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  'postmessage',
+);
+
 const GoogleAuth = async (req, res, next) => {
   try {
-    const { credential } = req.body;
-    const { name, email, sub } = jwtDecode(credential);
+    const { tokens } = await oAuth2Client.getToken(req.body.code);
+    const { name, email, sub } = jwtDecode(tokens.id_token);
 
     let user = await User.findOne({ email });
     if (user) {
@@ -79,8 +89,7 @@ const GoogleAuth = async (req, res, next) => {
       }})
     }
     
-    const token = createSecretToken(user._id);
-    res.cookie("token", token, {
+    res.cookie("token", tokens.id_token, {
       withCredentials: true,
       httpOnly: false,
     });
@@ -94,6 +103,5 @@ const GoogleAuth = async (req, res, next) => {
     console.error(error);
   }
 }
-
 
 export { Signup, Login, GoogleAuth };
