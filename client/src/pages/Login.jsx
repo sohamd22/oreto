@@ -47,7 +47,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const { data } = await axios.post("http://localhost:3000/login", { ...inputValue }, { withCredentials: true });
+            const { data } = await axios.post("http://localhost:3000/auth/login", { ...inputValue }, { withCredentials: true });
 
             const { success, message } = data;
             if (success) {
@@ -72,7 +72,7 @@ const Login = () => {
 
     const handleGoogleAuth = async ({ code }) => {   
         try {
-            const { data } = await axios.post("http://localhost:3000/google-auth", { code }, { withCredentials: true });
+            const { data } = await axios.post("http://localhost:3000/auth/google", { code }, { withCredentials: true });
     
             const { success, message } = data;
             if (success) {
@@ -108,7 +108,7 @@ const Login = () => {
                     </div>
 
                     <div className="flex flex-col gap-4 items-center">
-                        <form action="https://localhost:3000/login" method='POST' onSubmit={handleSubmit} className="w-full flex flex-col gap-12">
+                        <form action="https://localhost:3000/auth/login" method='POST' onSubmit={handleSubmit} className="w-full flex flex-col gap-12">
                             <div className="flex flex-col gap-6 text-base">
                                 <input required type="email" name="email" value={email} placeholder="Email" onInput={handleOnInput} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
                                 <div className="relative">

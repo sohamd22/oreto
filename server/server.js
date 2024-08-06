@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 import userRouter from "./routes/authRoute.js";
 import promptRouter from "./routes/promptRoute.js";
+import { userVerification } from "./middlewares/AuthMiddleware.js";
 
 // Server
 dotenv.config();
@@ -19,7 +20,8 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
-app.use('/', userRouter);
+app.post('/', userVerification);
+app.use('/auth', userRouter);
 app.use('/prompt', promptRouter);
 
 // Database
