@@ -21,9 +21,8 @@ const Dashboard = () => {
             }
             const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
             const { status, user } = data;
-            setName(user);
-
-            return status ? console.log(`Hello ${user}`) : (removeCookie("token"), navigate("/login"));
+            
+            return status ? setName(user) : (removeCookie("token"), navigate("/login"));
         };
         verifyCookie();
     }, [cookies, navigate, removeCookie]);
@@ -51,7 +50,7 @@ const Dashboard = () => {
     const [lists, setLists] = useState([]);
 
     const tabComponents = {
-        "chat": <Chat name={name} activateTab={activateTab} lists={lists} setLists={setLists} />,
+        "chat": <Chat name={name.split(' ')[0]} activateTab={activateTab} lists={lists} setLists={setLists} />,
         "emails": <Emails />,
         "lists": <Lists lists={lists} setLists={setLists} />,
     }

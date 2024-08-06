@@ -1,9 +1,8 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-
-import { FaGoogle } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -11,7 +10,9 @@ const Login = () => {
     useEffect(() => {
         const verifyCookie = async () => {
             if (cookies.token) {
-                navigate("/");
+                const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
+                const { status } = data;
+                status ? navigate("/") : null;
             }
         };
         verifyCookie();
@@ -30,8 +31,8 @@ const Login = () => {
         });
     };
 
-    const handleError = (err) => console.error(err);
-    const handleSuccess = (msg) => console.log(msg);
+    const handleError = (err) => toast.error(err, { position: 'bottom-left' });
+    const handleSuccess = (msg) => toast.success(msg, { position: 'bottom-right' });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,12 +86,12 @@ const Login = () => {
                                 <span className="text-sm tracking-wide">or login with</span>
                                 <hr className="flex-grow" />
                             </div>
-                            <button type="submit" className="flex justify-center items-center gap-4 w-full p-4 rounded-md border border-gray-400 shadow-lg font-medium text-lg transition-all duration-200 hover:-translate-y-0.5"><FaGoogle /> Google</button>
                         </div>
                     </form>
                 </div>                
             </div>
-        </section>        
+            <ToastContainer />
+        </section>
     );
 }
 
