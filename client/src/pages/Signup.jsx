@@ -4,6 +4,8 @@ import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 
+import { VscEye, VscEyeClosed } from "react-icons/vsc"
+
 const Signup = () => {
     const navigate = useNavigate();
     const [cookies, removeCookie] = useCookies([]);
@@ -31,6 +33,11 @@ const Signup = () => {
             [name]: value,
         });
     };
+
+    const [showPassword, setShowPassword] = useState(false);
+    const handleShowPassword = () => {
+        setShowPassword(!showPassword);
+    }
 
     const handleError = (err) => toast.error(err, { position: 'bottom-left' });
     const handleSuccess = (msg) => toast.success(msg, { position: 'bottom-right' });
@@ -82,7 +89,15 @@ const Signup = () => {
                         <div className="flex flex-col gap-6 text-base">
                             <input required name="name" type="text" value={name} placeholder="Full Name" onInput={handleOnInput} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
                             <input required type="email" name="email" value={email} placeholder="Email" onInput={handleOnInput} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
-                            <input required type="password" name="password" value={password} placeholder="Password" onInput={handleOnInput} className="bg-gray-800 p-4 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
+                            <div className="relative">
+                                <input required type={showPassword ? "text" : "password"} name="password" value={password} placeholder="Password" onInput={handleOnInput} className="w-full bg-gray-800 p-4 pr-16 rounded-md focus:outline-none border border-transparent focus:border-indigo-500" />
+                                { showPassword 
+                                    ?
+                                    <VscEyeClosed onClick={handleShowPassword} className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" size="1.5rem" />
+                                    :
+                                    <VscEye onClick={handleShowPassword} className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-gray-500" size="1.5rem" /> 
+                                }
+                            </div>
                         </div>
                         <div className="flex flex-col gap-4">
                             <button type="submit" className="w-full p-4 rounded-md bg-indigo-600 shadow-lg font-semibold text-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5">Create Account</button>
