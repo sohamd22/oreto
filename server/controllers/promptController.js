@@ -17,7 +17,7 @@ const activateTabFunctionDeclaration = {
     properties: {
       tab: {
         type: "STRING",
-        description: "Name of tab to activate which can be `emails` to work with emails or `lists` to work with lists (only if they are todo lists).",
+        description: "Name of tab to activate: can be 'emails' (to work with emails) or 'lists' (to view lists).",
       },
     },
     required: ["tab"],
@@ -28,19 +28,23 @@ const createListFunctionDeclaration = {
   name: "createList",
   parameters: {
     type: "OBJECT",
-    description: "Create name and items of a list.",
+    description: "Creates a list with a name and items.",
     properties: {
       name: {
         type: "STRING",
-        description: "Name of the list, preferably 1-2 words based on user prompt.",
+        description: "Name of the list. If not specified, generate a relevant name.",
       },
       items: {
         type: "STRING",
-        description: "JSON String with array of string list items (e.g. ['item1', 'item2', 'item3']). Can enhance the items and autofill if specified."
+        description: `A JSON String of string items in an array (e.g. ['item1', 'item2', 'item3']). 
+                      Enhance/generate the items if asked.`
       },
       backgroundColor: {
         type: "STRING",
-        description: "Appropriate color based on list name (e.g. green for Grocery). Can be `green`, `lime`, `yellow`, `blue`, `rose`, `violet`, `indigo`, `cyan`. If user specifies, pick the closest option."
+        description: `Relevant color based on list name/items (e.g. green for Grocery). 
+                      Can be 'green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'. 
+                      If no obvious relevant color, pick one randomly. If user specifies a color, pick 
+                      the closest option.`
       }
     },
     required: ["name", "items", "backgroundColor"],
@@ -51,15 +55,15 @@ const accessWebContentFunctionDeclaration = {
   name: "accessWebContent",
   parameters: {
     type: "OBJECT",
-    description: "Access the content of an implied webpage that hasn't previously been scraped.",
+    description: "Access the content of an implied http/https webpage link that you don't have info about.",
     properties: {
       link: {
         type: "STRING",
-        description: "Link to the webpage that has to be accessed.",
+        description: "Link to the webpage that has to be accessed. Add http/https if required.",
       },
       prompt: {
         type: "STRING",
-        description: "User's prompt."
+        description: "User's prompt unchanged."
       }
     },
     required: ["link", "prompt"],
@@ -89,7 +93,7 @@ const generativeModel = genAI.getGenerativeModel({
     functionDeclarations: [activateTabFunctionDeclaration, createListFunctionDeclaration, accessWebContentFunctionDeclaration],
   },
   generationConfig: {
-    temperature: 0.5
+    temperature: 0
   }
 });
 
@@ -97,16 +101,27 @@ const chat = generativeModel.startChat({
   history: [
     {
       role: "user",
-      parts: [{ text: `You are a personalized AI assistant named Oreto. You have function calling and are able to call the right 
-        functions when required, you only return text responses when none of the functions match, but never ever mention the functions
-        in front of the user. When a user tells you something that you don't know, let them know you dont't know but can answer 
-        questions if the user includes some context with a link. If a user prompt has multiple links let the user know you can only 
-        access one link at a time, then you can include any information about the first link. If the link does not start with 
-        http/https, let the user know it must. When the user mentions making or creating a list, ALWAYS use the createList function
-        generating a suitable name based on the prompts, don't just make a list on text always call the function.
-        
-        If a user prompt has any subtext starting with ~~, then that is just additional info added by the server for you to remember that the user is not aware of,
-        do not mention it in front of the user.` }],
+      parts: [{ 
+        text: 
+          `You are a personalized AI assistant named Oreto. You have the following function calling abilities:
+          - Creating lists.
+          - Working with emails.
+          - Accessing http/https websites that haven't been accessed before (specify: one link at a time and has
+            to start with http/https).
+          - Sending reminders and suggestions.
+          - Saving any relevant info that can be used to personalize the user's experience as a memory.
+          - Activating tabs.
+          Never name the corresponding functions in front of the user.
+          
+          Besides these, you also have the ability to converse with the user and answer their questions. 
+          If you believe you need context to reply to a prompt, you can ask the user to provide context 
+          either through text or a link. Ask clarifying questions if and only if not enough information 
+          is available to complete the request.
+          Please do not use the backslash (\\) character in your responses.
+
+          If a prompt has the characters ~~ in it, that signifies additional server added info for you to remember, 
+          it was not added by the user so do not mention it in front of them.` 
+      }],
     },
   ]
 });
@@ -121,13 +136,11 @@ const functions = {
       await page.goto(link, {waitUntil: 'domcontentloaded'});
       const text = await page.$eval('*', (el) => el.innerText);
       const links = (await page.$$eval('a', (anchors) => anchors.map(anchor => anchor.href))).join(' ');
-
-      const result = await chat.sendMessage(`${prompt}\n~~Text content scraped from ${link}:${text}\nLinks on the webpage: ${links}`);
-      return {name: 'displayResponse', args: { response: result.response.text() }}
+      
+      return responseHandler(`${prompt}\n~~Text content scraped from ${link}:${text}\nLinks on the webpage: ${links}`);
     }
     catch (error) {
-      const result = await chat.sendMessage(`${prompt}\n~~Server wasn't able to access ${link}, tell user that they can try a different link.`);
-      return {name: 'displayResponse', args: { response: result.response.text() }}
+      return responseHandler(`${prompt}\n~~Server wasn't able to access the provided link(s), tell user that they can try a different link.`);
     }
     finally {
       await browser.close();
@@ -143,39 +156,25 @@ const functions = {
   }
 }
 
-const visitedLinks = new Set();
-
 // Chat Response Handler
 const responseHandler = async (prompt) => {
-    let words = prompt.split(/\s+/);
-    let link = null;
-    for (let word of words) {
-      try {
-          let potentialUrl = new URL(word);
-          link = potentialUrl.href;
-          break;
-      } catch (e) {
-      }
-    }
-
-    if (link && !visitedLinks.has(link)) {
-      visitedLinks.add(link);
-      return functions.accessWebContent({ link, prompt });
-    }
-
     const result = await chat.sendMessage(prompt);
     const call = result.response.functionCalls() ? result.response.functionCalls()[0] : null;
 
     if (call) {
+      for (const property in call.args) {
+        call.args[property] = call.args[property].replace('\\', '');
+      }
+
       if (call.name in functions) {
         return functions[call.name](call.args);
       }
       else {
-        return {name: call.name, args: call.args};
+        return {name: call.name, args: call.args, response: result.response.text().replace('\\', '')};
       }      
     }
     else {
-      return {name: 'displayResponse', args: { response: result.response.text() }}
+      return { response: result.response.text().replace('\\', '') };
     }
 }
 

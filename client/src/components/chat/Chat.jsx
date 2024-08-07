@@ -1,46 +1,10 @@
-import axios from "axios";
-import { useState } from "react";
 import PropTypes from "prop-types";
 import Response from "./Response";
-import PromptInput from "../PromptInput";
+import PromptHandler from "../PromptHandler";
 
-const Chat = ({ name, email, activateTab, lists, setLists }) => {
+const Chat = ({ name, response, functions }) => {
     const hourOfDay = (new Date()).getHours();
     const timeOfDay = hourOfDay < 12 ? "Morning" : (hourOfDay < 17 ? "Afternoon" : "Evening");
-
-    const [response, setResponse] = useState('');
-
-    const functions = {
-        activateTab: ({ tab }) => { activateTab(tab) },
-        createList: async ({name, items, backgroundColor}) => {
-                backgroundColor = `bg-${backgroundColor}-600`;
-                items = JSON.parse(items.replace('\\', ''));
-                const listsUpdated = [{name, items, backgroundColor}, ...lists];
-                setLists(listsUpdated);
-                activateTab("lists");
-                await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email });
-            },
-        displayResponse: ({ response }) => { setResponse(response) },
-    }
-
-    const promptHandler = async (event, prompt, setPrompt) => {
-        event.preventDefault();
-
-        const response = await axios.post("http://localhost:3000/prompt", { prompt });
-        const data = response.data;
-
-        if (data) {
-            setPrompt('');
-            const textArea = document.querySelector("textarea");
-            textArea.style.height = `${textArea.scrollHeight}px`;
-            textArea.style.height = 'inherit';
-
-            functions[data.name](data.args);
-        }
-        else {
-            setResponse("Sorry, there was an error.");
-        }
-    }
 
     return (
         <div className="h-full w-full py-8 pr-12 flex flex-col gap-12 overflow-hidden">
@@ -50,17 +14,15 @@ const Chat = ({ name, email, activateTab, lists, setLists }) => {
 
             <div className="mt-auto"></div>
             <Response content={response} />
-            <PromptInput promptHandler={promptHandler} placeholder="Tell me about ..."/>
+            <PromptHandler functions={functions} placeholder="Tell me about ..."/>
         </div>
     );
 }
 
 Chat.propTypes = {
     name: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    activateTab: PropTypes.func.isRequired,
-    lists: PropTypes.array.isRequired,
-    setLists: PropTypes.func.isRequired
+    response: PropTypes.string.isRequired,
+    functions: PropTypes.array.isRequired,
 }
 
 export default Chat;

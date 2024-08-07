@@ -8,6 +8,9 @@ const List = ({ list }) => {
     list.name = listName;
 
     const { backgroundColor, items } = list;
+
+    const deleteList = () => {
+    }
     
     return (
         <div className={`relative ${backgroundColor} p-4 rounded-lg flex flex-col gap-4`}>
@@ -21,7 +24,7 @@ const List = ({ list }) => {
                 </li>
             </ul>
 
-            <button className="-mt-8 ml-auto w-fit bg-red-500 transition-colors duration-200 hover:bg-red-600 border-2 border-gray-900 p-1.5 rounded-full"><MdDeleteOutline size="1.25rem" /></button>
+            <button onClick={deleteList} className="-mt-8 ml-auto w-fit bg-red-500 transition-colors duration-200 hover:bg-red-600 border-2 border-gray-900 p-1.5 rounded-full"><MdDeleteOutline size="1.25rem" /></button>
         </div>
     );
 }

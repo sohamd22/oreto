@@ -14,9 +14,47 @@ import Lists from "../components/lists/Lists";
 const Dashboard = () => {
     const navigate = useNavigate();
     const [cookies, removeCookie] = useCookies([]);
-    const [user, setUser] = useState();
+    const [user, setUser] = useState({});
 
-    const [lists, setLists] = useState();
+    const [response, setResponse] = useState('');
+
+    const [lists, setLists] = useState([]);
+    const listColors = ['green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'];
+
+    const [activeTab, setActiveTab] = useState("chat");
+
+    const activateTab = (tab) => {
+        const selectedTabIcon = document.querySelector(`[data-key="${tab}"]`);
+        const tabIcons = Array.from(document.getElementById("tabs").children);
+
+        tabIcons.forEach(icon => {
+            icon.classList.remove("text-indigo-300");
+            icon.classList.add("text-gray-600");
+        });
+
+        selectedTabIcon.classList.remove("text-gray-600");
+        selectedTabIcon.classList.add("text-indigo-300");
+        setActiveTab(tab);
+    }
+
+    const functions = {
+        activateTab: ({ tab }) => activateTab(tab),
+
+        createList: async ({name="My List", items="[]", backgroundColor}) => {
+            if (!backgroundColor) {
+                backgroundColor = listColors[Math.floor(Math.random() * listColors.length)];
+                console.log(backgroundColor);
+            }
+            backgroundColor = `bg-${backgroundColor}-600`;
+            items = JSON.parse(items);
+            const listsUpdated = [{name, items, backgroundColor}, ...lists];
+            setLists(listsUpdated);
+            activateTab("lists");
+            await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email: user.email });
+        },
+            
+        setResponse,
+    }
 
     useEffect(() => {
         const verifyCookie = async () => {
@@ -37,25 +75,12 @@ const Dashboard = () => {
         navigate("/login");
     };
 
-    const [activeTab, setActiveTab] = useState("chat");
-    const activateTab = (selectedTab) => {
-        const selectedTabIcon = document.querySelector(`[data-key="${selectedTab}"]`);
-        const tabIcons = Array.from(document.getElementById("tabs").children);
-
-        tabIcons.forEach(tab => {
-            tab.classList.remove("text-indigo-300");
-            tab.classList.add("text-gray-600");
-        });
-
-        selectedTabIcon.classList.remove("text-gray-600");
-        selectedTabIcon.classList.add("text-indigo-300");
-        setActiveTab(selectedTab);
-    }
+    
     
     const tabComponents = {
-        "chat": <Chat name={user ? user.name.split(' ')[0] : ""} email={user ? user.email : ""} activateTab={activateTab} lists={lists} setLists={setLists} />,
+        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,
         "emails": <Emails />,
-        "lists": <Lists lists={lists} setLists={setLists} />,
+        "lists": <Lists lists={lists} createList={functions.createList} />,
     }
 
     return (

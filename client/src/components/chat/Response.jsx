@@ -4,7 +4,7 @@ import { MdThumbUp, MdThumbDown } from "react-icons/md";
 const Response = ({ content }) => {
     const displayRows = [];    
     if (content) {
-        const lines = content.trim().replace('\\', '').split('\n');
+        const lines = content.trim().split('\n');
         
         lines.forEach(line => {
             displayRows.push(<span>{line}<br /></span>);

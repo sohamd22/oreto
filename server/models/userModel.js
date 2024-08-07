@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
         email: String,
     },
     lists: [],
+    chatHistory: [],
     createdAt: {
         type: Date,
         default: new Date()

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PromptInput from "../PromptInput";
+import PromptHandler from "../PromptHandler";
 import Email from "./Email";
 
 const Emails = () => {
@@ -46,7 +46,7 @@ const Emails = () => {
             </div>
             
             <div className="mt-auto"></div>
-            <PromptInput placeholder="Sort my emails by ..." />
+            <PromptHandler placeholder="Sort my emails by ..." />
         </div>
     );
 }
