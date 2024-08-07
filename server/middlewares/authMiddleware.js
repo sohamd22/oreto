@@ -26,20 +26,22 @@ const userVerification = async (req, res) => {
       else {
         const user = await User.findById(data.id);
         if (user)
-          return res.json({ status: true, user: user.name });
+          return res.json({ status: true, user: {name: user.name, email: user.email, lists: user.lists} });
         else
           return res.json({ status: false });
       }
     });
   }
   else {
-    const user = await oAuth2Client.verifyIdToken({
+    const googleUser = await oAuth2Client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     })
 
+    const user = await User.findOne({ email: googleUser.payload.email });
+
     if (user) {
-      return res.json({ status: true, user: user.payload.name });
+      return res.json({ status: true, user: {name: user.name, email: user.email, lists: user.lists }});
     }
     else {
       return res.json({ status: false });

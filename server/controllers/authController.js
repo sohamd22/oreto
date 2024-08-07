@@ -24,7 +24,7 @@ const Signup = async (req, res, next) => {
 
     res
         .status(201)
-        .json({ message: "User signed up successfully", success: true, user });
+        .json({ message: "User signed up successfully", success: true });
     next();
   } 
   catch (error) {

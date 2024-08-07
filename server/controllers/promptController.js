@@ -36,7 +36,7 @@ const createListFunctionDeclaration = {
       },
       items: {
         type: "STRING",
-        description: "JSON String with array of short list items. Can enhance the items and autofill if specified."
+        description: "JSON String with array of string list items (e.g. ['item1', 'item2', 'item3']). Can enhance the items and autofill if specified."
       },
       backgroundColor: {
         type: "STRING",
@@ -51,7 +51,7 @@ const accessWebContentFunctionDeclaration = {
   name: "accessWebContent",
   parameters: {
     type: "OBJECT",
-    description: "Access the content of a mentioned webpage that hasn't previously been scraped.",
+    description: "Access the content of an implied webpage that hasn't previously been scraped.",
     properties: {
       link: {
         type: "STRING",
@@ -89,7 +89,7 @@ const generativeModel = genAI.getGenerativeModel({
     functionDeclarations: [activateTabFunctionDeclaration, createListFunctionDeclaration, accessWebContentFunctionDeclaration],
   },
   generationConfig: {
-    temperature: 0.3
+    temperature: 0.5
   }
 });
 
@@ -98,10 +98,12 @@ const chat = generativeModel.startChat({
     {
       role: "user",
       parts: [{ text: `You are a personalized AI assistant named Oreto. You have function calling and are able to call the right 
-        functions when required, you only return text responses when none of the functions match. When a user tells you something
-        that you don't know, let them know you dont't know but can answer questions if the user includes some context with a
-        a link. If a user prompt has multiple links let the user know you can only access one link at a time, then you can include
-        any information about the first link. If the link does not start with http/https, let the user know it must.
+        functions when required, you only return text responses when none of the functions match, but never ever mention the functions
+        in front of the user. When a user tells you something that you don't know, let them know you dont't know but can answer 
+        questions if the user includes some context with a link. If a user prompt has multiple links let the user know you can only 
+        access one link at a time, then you can include any information about the first link. If the link does not start with 
+        http/https, let the user know it must. When the user mentions making or creating a list, ALWAYS use the createList function
+        generating a suitable name based on the prompts, don't just make a list on text always call the function.
         
         If a user prompt has any subtext starting with ~~, then that is just additional info added by the server for you to remember that the user is not aware of,
         do not mention it in front of the user.` }],

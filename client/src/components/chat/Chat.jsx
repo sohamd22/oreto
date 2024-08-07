@@ -3,10 +3,8 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Response from "./Response";
 import PromptInput from "../PromptInput";
-import Reminder from "./Reminder";
-import List from "../lists/List";
 
-const Chat = ({ name, activateTab, lists, setLists }) => {
+const Chat = ({ name, email, activateTab, lists, setLists }) => {
     const hourOfDay = (new Date()).getHours();
     const timeOfDay = hourOfDay < 12 ? "Morning" : (hourOfDay < 17 ? "Afternoon" : "Evening");
 
@@ -14,11 +12,13 @@ const Chat = ({ name, activateTab, lists, setLists }) => {
 
     const functions = {
         activateTab: ({ tab }) => { activateTab(tab) },
-        createList: ({name, items, backgroundColor}) => {
+        createList: async ({name, items, backgroundColor}) => {
                 backgroundColor = `bg-${backgroundColor}-600`;
                 items = JSON.parse(items.replace('\\', ''));
-                activateTab('lists');
-                setLists([<List key={name} name={name} items={items} backgroundColor={backgroundColor} />, ...lists]);
+                const listsUpdated = [{name, items, backgroundColor}, ...lists];
+                setLists(listsUpdated);
+                activateTab("lists");
+                await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email });
             },
         displayResponse: ({ response }) => { setResponse(response) },
     }
@@ -57,6 +57,7 @@ const Chat = ({ name, activateTab, lists, setLists }) => {
 
 Chat.propTypes = {
     name: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
     activateTab: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
     setLists: PropTypes.func.isRequired

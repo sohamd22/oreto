@@ -4,13 +4,20 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
+import User from "./models/userModel.js";
+
 import userRouter from "./routes/authRoute.js";
 import promptRouter from "./routes/promptRoute.js";
 import { userVerification } from "./middlewares/AuthMiddleware.js";
 
-// Server
 dotenv.config();
 
+// Database
+mongoose.connect(process.env.ATLAS_URI)
+.then(() => console.log("MongoDB is connected successfully"))
+.catch((error) => console.error(error));
+
+// Server
 const app = express();
 app.use(cors({
     origin: ["http://localhost:5173"],
@@ -24,10 +31,14 @@ app.post('/', userVerification);
 app.use('/auth', userRouter);
 app.use('/prompt', promptRouter);
 
-// Database
-mongoose.connect(process.env.ATLAS_URI)
-.then(() => console.log("MongoDB is connected successfully"))
-.catch((error) => console.error(error));
+app.post('/lists/save', async (req, res) => {
+    const {lists, email} = req.body;
+    const user = await User.findOne({ email });
+    if (user) {
+        user.lists = lists;
+        user.save();
+    }
+});
 
 // Server Hosting
 const PORT = process.env.PORT || 3000;

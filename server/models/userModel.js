@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
         id: String,
         email: String,
     },
+    lists: [],
     createdAt: {
         type: Date,
         default: new Date()

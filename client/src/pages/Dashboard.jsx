@@ -14,7 +14,10 @@ import Lists from "../components/lists/Lists";
 const Dashboard = () => {
     const navigate = useNavigate();
     const [cookies, removeCookie] = useCookies([]);
-    const [name, setName] = useState("");
+    const [user, setUser] = useState();
+
+    const [lists, setLists] = useState();
+
     useEffect(() => {
         const verifyCookie = async () => {
             if (!cookies.token) {
@@ -23,7 +26,7 @@ const Dashboard = () => {
             const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
             const { status, user } = data;
             
-            return status ? setName(user) : (removeCookie("token"), navigate("/login"));
+            return status ? (setUser(user), setLists(user.lists)) : (removeCookie("token"), navigate("/login"));
         };
         verifyCookie();
     }, [cookies, navigate, removeCookie]);
@@ -48,11 +51,9 @@ const Dashboard = () => {
         selectedTabIcon.classList.add("text-indigo-300");
         setActiveTab(selectedTab);
     }
-
-    const [lists, setLists] = useState([]);
-
+    
     const tabComponents = {
-        "chat": <Chat name={name.split(' ')[0]} activateTab={activateTab} lists={lists} setLists={setLists} />,
+        "chat": <Chat name={user ? user.name.split(' ')[0] : ""} email={user ? user.email : ""} activateTab={activateTab} lists={lists} setLists={setLists} />,
         "emails": <Emails />,
         "lists": <Lists lists={lists} setLists={setLists} />,
     }

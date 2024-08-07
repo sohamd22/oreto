@@ -8,7 +8,7 @@ const Lists = ({ lists, setLists }) => {
     const createList = ({name, items, backgroundColor}) => {
         backgroundColor = `bg-${backgroundColor}-600`;
         items = JSON.parse(items.replace('\\', ''));
-        setLists([<List key={name} name={name} items={items} backgroundColor={backgroundColor} />, ...lists]);
+        setLists([{name, items, backgroundColor}, ...lists]);
     }
 
     return (
@@ -16,7 +16,7 @@ const Lists = ({ lists, setLists }) => {
             <h2 className="relative w-fit merriweather font-light text-3xl leading-tight tracking-wide text-gray-300 before:absolute before:h-[1px] before:w-3/4 before:bg-gradient-to-r before:from-indigo-500 before:to-violet-500 before:-bottom-2">You have <mark className="bg-transparent text-white font-normal">{ lists.length || "no" } list{lists.length != 1 ? 's' : ''}</mark>{lists.length ? '' : " yet"}.</h2>
             
             <Masonry gutter="20px" columnsCount={3} className="max-h-full overflow-y-auto overflow-x-hidden pr-5">
-                { lists }
+                { lists.map((list) => <List key={list.name} list={list} />) }
             </Masonry>
 
             <div className="mt-auto"></div>
