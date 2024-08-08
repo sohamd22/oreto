@@ -74,8 +74,6 @@ const Dashboard = () => {
         removeCookie("token");
         navigate("/login");
     };
-
-    
     
     const tabComponents = {
         "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,

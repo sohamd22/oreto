@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import { createSecretToken } from "../utils/secretToken.js";
-import { OAuth2Client } from "google-auth-library";
+import { google } from "googleapis";
 import { jwtDecode } from 'jwt-decode';
 import dotenv from "dotenv";
 
@@ -42,7 +42,7 @@ const Login = async (req, res, next) => {
     if(!user){
       return res.json({message:'Incorrect password or email' }) 
     }
-    const auth = await bcrypt.compare(password, user.password)
+    const auth = bcrypt.compare(password, user.password)
     if (!auth) {
       return res.json({message:'Incorrect password or email' }) 
     }
@@ -63,7 +63,7 @@ const Login = async (req, res, next) => {
   }
 }
 
-const oAuth2Client = new OAuth2Client(
+const oAuth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
   'http://localhost:5173',
@@ -72,6 +72,7 @@ const oAuth2Client = new OAuth2Client(
 const GoogleAuth = async (req, res, next) => {
   try {
     const { tokens } = await oAuth2Client.getToken(req.body.code);
+    oAuth2Client.setCredentials(tokens);
     const { name, email, sub } = jwtDecode(tokens.id_token);
 
     let user = await User.findOne({ email });
@@ -104,4 +105,4 @@ const GoogleAuth = async (req, res, next) => {
   }
 }
 
-export { Signup, Login, GoogleAuth };
+export { Signup, Login, GoogleAuth, oAuth2Client };

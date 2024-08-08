@@ -38,7 +38,7 @@ const PromptHandler = ({ functions, additionalButtons, placeholder }) => {
 }
 
 PromptHandler.propTypes = {
-    functions: PropTypes.func.isRequired,
+    functions: PropTypes.object.isRequired,
     additionalButtons: PropTypes.array,
     placeholder: PropTypes.string.isRequired
 }

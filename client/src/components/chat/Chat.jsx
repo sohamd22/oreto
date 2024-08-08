@@ -22,7 +22,7 @@ const Chat = ({ name, response, functions }) => {
 Chat.propTypes = {
     name: PropTypes.string.isRequired,
     response: PropTypes.string.isRequired,
-    functions: PropTypes.array.isRequired,
+    functions: PropTypes.object.isRequired,
 }
 
 export default Chat;

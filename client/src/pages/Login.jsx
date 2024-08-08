@@ -90,7 +90,7 @@ const Login = () => {
     }
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: handleGoogleAuth,
-        flow: 'auth-code',
+        flow: "auth-code"
       });
 
     return (
