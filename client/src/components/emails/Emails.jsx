@@ -36,8 +36,9 @@ const Emails = () => {
             
             <div className="flex gap-4">
                 <button data-key="work" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-blue-600 rounded-md border-l-2">Work</button>
-                <button data-key="personal" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-rose-600 rounded-md opacity-40">Personal</button>
                 <button data-key="financial" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-green-600 rounded-md opacity-40">Financial</button>
+                <button data-key="personal" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-purple-600 rounded-md opacity-40">Personal</button>
+                <button data-key="social" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-rose-600 rounded-md opacity-40">Social</button>
                 <button data-key="promo" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-yellow-600 rounded-md opacity-40">Promo/News</button>
             </div>
 
@@ -54,6 +55,7 @@ const Emails = () => {
 // Work
 // Personal
 // Financial
+// Social
 // Promotions/Newsletters
 // Each one can have a deadline tag, action required tag, reference tag
 

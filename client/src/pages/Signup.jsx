@@ -10,17 +10,12 @@ import { FaGoogle } from "react-icons/fa";
 
 const Signup = () => {
     const navigate = useNavigate();
-    const [cookies, removeCookie] = useCookies([]);
+    const [cookies] = useCookies([]);
     useEffect(() => {
-        const verifyCookie = async () => {
-            if (cookies.token) {
-                const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
-                const { status } = data;
-                status ? navigate("/") : null;
-            }
-        };
-        verifyCookie();
-    }, [cookies, navigate, removeCookie]);
+        if (cookies.token && cookies.token != "undefined") {
+            navigate("/");
+        }
+    }, [cookies, navigate]);
     
     const [inputValue, setInputValue] = useState({
         name: "",
@@ -93,7 +88,8 @@ const Signup = () => {
     }
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: handleGoogleAuth,
-        flow: "auth-code"
+        flow: "auth-code",
+        scope: ["https://www.googleapis.com/auth/gmail.readonly"]
       });
 
     return (

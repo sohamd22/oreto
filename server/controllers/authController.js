@@ -89,6 +89,9 @@ const GoogleAuth = async (req, res, next) => {
         email
       }})
     }
+
+    user.google.tokens = tokens;
+    user.save();
     
     res.cookie("token", tokens.id_token, {
       withCredentials: true,
@@ -105,4 +108,4 @@ const GoogleAuth = async (req, res, next) => {
   }
 }
 
-export { Signup, Login, GoogleAuth, oAuth2Client };
+export { Signup, Login, GoogleAuth };

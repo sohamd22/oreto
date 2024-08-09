@@ -58,13 +58,20 @@ const Dashboard = () => {
 
     useEffect(() => {
         const verifyCookie = async () => {
-            if (!cookies.token) {
+            if (!cookies.token || cookies.token == "undefined") {
                 navigate("/login");
             }
             const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
             const { status, user } = data;
             
-            return status ? (setUser(user), setLists(user.lists)) : (removeCookie("token"), navigate("/login"));
+            return status 
+                    ? 
+                    (setUser(user),
+                     setLists(user.lists)) 
+                    : 
+                    (removeCookie("token"),
+                     navigate("/login"),
+                    console.log(cookies));
         };
         verifyCookie();
     }, [cookies, navigate, removeCookie]);

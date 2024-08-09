@@ -10,17 +10,12 @@ import { FaGoogle } from "react-icons/fa";
 
 const Login = () => {
     const navigate = useNavigate();
-    const [cookies, removeCookie] = useCookies([]);
+    const [cookies] = useCookies([]);
     useEffect(() => {
-        const verifyCookie = async () => {
-            if (cookies.token) {
-                const { data } = await axios.post("http://localhost:3000", {}, { withCredentials: true });
-                const { status } = data;
-                status ? navigate("/") : null;
-            }
-        };
-        verifyCookie();
-    }, [cookies, navigate, removeCookie]);
+        if (cookies.token && cookies.token != "undefined") {
+            navigate("/");
+        }
+    }, [cookies, navigate]);
 
     const [inputValue, setInputValue] = useState({
         email: "",
@@ -38,7 +33,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
-    }
+    } 
 
     const handleError = (err) => toast.error(err, { position: 'bottom-left' });
     const handleSuccess = (msg) => toast.success(msg, { position: 'bottom-right' });
@@ -90,7 +85,8 @@ const Login = () => {
     }
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: handleGoogleAuth,
-        flow: "auth-code"
+        flow: "auth-code",
+        scope: ["https://www.googleapis.com/auth/gmail.readonly"]
       });
 
     return (

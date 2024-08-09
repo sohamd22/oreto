@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     google: {
         id: String,
         email: String,
+        tokens: {}
     },
     lists: [],
     chatHistory: [],

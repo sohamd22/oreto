@@ -8,7 +8,7 @@ import User from "./models/userModel.js";
 
 import userRouter from "./routes/authRoute.js";
 import promptRouter from "./routes/promptRoute.js";
-import { userVerification } from "./middlewares/AuthMiddleware.js";
+import { userVerification } from "./middlewares/authMiddleware.js";
 
 dotenv.config();
 
