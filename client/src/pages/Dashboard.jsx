@@ -1,6 +1,6 @@
 import axios from "axios";
 import { googleLogout } from "@react-oauth/google";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -20,6 +20,14 @@ const Dashboard = () => {
 
     const [lists, setLists] = useState([]);
     const listColors = ['green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'];
+
+    const [emails, setEmails] = useState({
+        work: [],
+        financial: [],
+        personal: [],
+        social: [],
+        promo: []
+    });
 
     const [activeTab, setActiveTab] = useState("chat");
 
@@ -56,6 +64,12 @@ const Dashboard = () => {
         setResponse,
     }
 
+    const Logout = useCallback(() => {
+        googleLogout();
+        removeCookie("token");
+        navigate("/login");
+    }, [navigate, removeCookie]);
+
     useEffect(() => {
         const verifyCookie = async () => {
             if (!cookies.token || cookies.token == "undefined") {
@@ -67,24 +81,17 @@ const Dashboard = () => {
             return status 
                     ? 
                     (setUser(user),
-                     setLists(user.lists)) 
+                     setLists(user.lists),
+                     setEmails(user.emails)) 
                     : 
-                    (removeCookie("token"),
-                     navigate("/login"),
-                    console.log(cookies));
+                    (Logout());
         };
         verifyCookie();
-    }, [cookies, navigate, removeCookie]);
-
-    const Logout = () => {
-        googleLogout();
-        removeCookie("token");
-        navigate("/login");
-    };
+    }, [cookies, navigate, Logout]);
     
     const tabComponents = {
         "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,
-        "emails": <Emails />,
+        "emails": <Emails emails={emails} />,
         "lists": <Lists lists={lists} createList={functions.createList} />,
     }
 

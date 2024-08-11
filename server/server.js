@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import User from "./models/userModel.js";
 
 import userRouter from "./routes/authRoute.js";
-import promptRouter from "./routes/promptRoute.js";
+import chatRouter from "./routes/chatRoute.js";
 import { userVerification } from "./middlewares/authMiddleware.js";
 
 dotenv.config();
@@ -29,13 +29,13 @@ app.use(express.json());
 
 app.post('/', userVerification);
 app.use('/auth', userRouter);
-app.use('/prompt', promptRouter);
+app.use('/chat', chatRouter);
 
 app.post('/lists/save', async (req, res) => {
     const {lists, email} = req.body;
     const user = await User.findOne({ email });
     if (user) {
-        user.lists = lists;
+        user.data.lists = lists;
         user.save();
     }
 });

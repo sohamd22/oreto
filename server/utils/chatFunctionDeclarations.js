@@ -63,7 +63,7 @@ const handleEmailFunctionDeclaration = {
     name: "handleEmail",
     parameters: {
         type: "OBJECT",
-        description: "Handles an email by improving the subject, extracting dates, and categorizing it when asked to.",
+        description: "Handles an email by improving the subject, extracting dates, and categorizing it.",
         properties: {
             subject: {
                 type: "STRING",
@@ -76,7 +76,7 @@ const handleEmailFunctionDeclaration = {
             },
             category: {
                 type: "STRING",
-                description: "Name of category to classify email into: can be 'work', 'financial', 'personal', 'social', 'promo'."
+                description: "Name of category to classify email into: can be 'work', 'financial', 'personal', 'social', and 'promo' (for promotions/newsletters)."
             }
         },
         required: ["subject", "category"],

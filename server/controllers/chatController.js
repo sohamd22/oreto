@@ -2,7 +2,8 @@
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import puppeteer from 'puppeteer';
-import functionDeclarations from "../utils/promptFunctionDeclarations.js";
+import functionDeclarations from "../utils/chatFunctionDeclarations.js";
+import User from "../models/userModel.js";
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ const chat = generativeModel.startChat({
         text: 
           `You are a personalized AI assistant named Oreto. You have the following function calling abilities:
           - Creating lists.
-          - Handling emails.
+          - Handling emails (only call the handleEmail function when given this key: ~~handleEmail).
           - Accessing http/https websites that haven't been accessed before (specify: one link at a time and has
             to start with http/https).
           - Sending reminders and suggestions.
@@ -86,6 +87,8 @@ const responseHandler = async (prompt) => {
     const call = result.response.functionCalls() ? result.response.functionCalls()[0] : null;
 
     if (call) {
+      console.log(call);
+      
       for (const property in call.args) {
         call.args[property] = call.args[property].replace(/\\/g, '');
       }

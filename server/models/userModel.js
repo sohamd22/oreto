@@ -19,8 +19,20 @@ const userSchema = new mongoose.Schema({
         email: String,
         tokens: {}
     },
-    lists: [],
-    chatHistory: [],
+    data: {
+        lists: [],
+        chatHistory: [],
+        emails: {
+            lastCheckTimeSeconds: Number,
+            categories: {
+                work: [],
+                financial: [],
+                personal: [],
+                social: [],
+                promo: []
+            }
+        }
+    },  
     createdAt: {
         type: Date,
         default: new Date()
