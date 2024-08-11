@@ -9,7 +9,7 @@ const PromptHandler = ({ functions, additionalButtons, placeholder }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const response = await axios.post("http://localhost:3000/chat", { prompt, email });
+        const response = await axios.post("http://localhost:3000/chat", { prompt });
         const data = response.data;
 
         if (data) {

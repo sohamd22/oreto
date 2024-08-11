@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import { google } from "googleapis";
-import { responseHandler } from "../controllers/chatController.js";
+import { initializeChat, responseHandler } from "../controllers/chatController.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,7 +12,7 @@ const oAuth2Client = new google.auth.OAuth2(
   'http://localhost:5173',
 );
 
-const emailCheck = async (user) => {
+const checkEmails = async (user) => {
   oAuth2Client.setCredentials(user.google.tokens);
         
   const gmail = google.gmail({version: 'v1', auth: oAuth2Client});
@@ -56,7 +56,7 @@ const emailCheck = async (user) => {
     });
 
     const prompt = 
-    `Key: ~~handleEmail. Call the handleEmail function to improve the subject, extract datetimes, and categorize the following email:
+    `Call the handleEmail function to improve the subject, extract datetimes, and categorize the following email:
     Sender: ${sender}
     Subject: ${subject}
     Body: ${body}`;
@@ -74,11 +74,11 @@ const emailCheck = async (user) => {
 
     emailCategories[result?.category].push(email);
   };
-  Object.keys(obj).forEach((key, index) => {
-    emailCategories[key] = [...emailCategories[key], ...user.data.emails.categories]
+  Object.keys(emailCategories).forEach((key, _) => {
+    emailCategories[key] = [...emailCategories[key], ...user.data.emails.categories[key]]
   });
   user.data.emails.categories = emailCategories;
-  user.save();
+  await user.save();
 }
 
 const userVerification = async (req, res) => {
@@ -95,10 +95,13 @@ const userVerification = async (req, res) => {
       } 
       else {
         const user = await User.findById(data.id);
-        if (user)
+        if (user) {
+          initializeChat(user);
           return res.json({ status: true, user: {name: user.name, email: user.email, lists: user.lists} });
-        else
+        }
+        else {
           return res.json({ status: false });
+        }
       }
     });
   }
@@ -111,7 +114,8 @@ const userVerification = async (req, res) => {
 
       const user = await User.findOne({ email: googleUser.payload.email });
       if (user) {
-        await emailCheck(user);
+        initializeChat(user);
+        await checkEmails(user);
 
         return res.json({ status: true, user: {name: user.name, email: user.email, emails: user.data.emails.categories, lists: user.data.lists }});
       }
