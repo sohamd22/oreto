@@ -56,13 +56,13 @@ const checkEmails = async (user) => {
     });
 
     const prompt = 
-    `Call the handleEmail function to improve the subject, extract datetimes, and categorize the following email:
+    `Call the handleEmail function to improve the subject, extract important datetimes, and categorize the following email:
     Sender: ${sender}
     Subject: ${subject}
     Body: ${body}`;
 
     const result = (await responseHandler(prompt)).args;
-
+    
     const email = {
       id,
       sender,
@@ -71,6 +71,8 @@ const checkEmails = async (user) => {
       category: result?.category,
       bodyDatetimes: result?.datetime
     }
+
+    
 
     emailCategories[result?.category].push(email);
   };

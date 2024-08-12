@@ -1,35 +1,40 @@
+import { FunctionDeclarationSchemaType } from "@google/generative-ai";
+
 const activateTabFunctionDeclaration = {
     name: "activateTab",
     parameters: {
-        type: "OBJECT",
+        type: FunctionDeclarationSchemaType.OBJECT,
         description: "Select a tab to activate.",
         properties: {
             tab: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: "Name of tab to activate: can be 'emails' (to work with emails) or 'lists' (to view lists).",
             },
         },
         required: ["tab"],
     },
 };
-  
+
 const createListFunctionDeclaration = {
     name: "createList",
     parameters: {
-        type: "OBJECT",
-        description: "Creates a list with a name and items.",
+        type: FunctionDeclarationSchemaType.OBJECT,
+        description: "Create a list name and items.",
         properties: {
             name: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: "Name of the list. If not specified, generate a relevant name.",
             },
             items: {
-                type: "STRING",
-                description: `A JSON String of string items in an array (e.g. ['item1', 'item2', 'item3']). 
-                            Enhance/generate the items if asked.`
+                type: FunctionDeclarationSchemaType.ARRAY,
+                description: `Array of string list items. Enhance/generate the items if asked.`,
+                items: {
+                    type: FunctionDeclarationSchemaType.STRING,
+                    description: "A list item."
+                }
             },
             backgroundColor: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: `Relevant color based on list name/items (e.g. green for Grocery). 
                             Can be 'green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'. 
                             If no obvious relevant color, pick one randomly. If user specifies a color, pick 
@@ -43,15 +48,15 @@ const createListFunctionDeclaration = {
 const accessWebContentFunctionDeclaration = {
     name: "accessWebContent",
     parameters: {
-        type: "OBJECT",
-        description: "Access the content of an implied http/https webpage link that you don't have info about.",
+        type: FunctionDeclarationSchemaType.OBJECT,
+        description: "Access content of an implied http/https webpage link that you don't have info about.",
         properties: {
             link: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: "Link to the webpage that has to be accessed. Add http/https if required.",
             },
             prompt: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: "User's prompt unchanged."
             }
         },
@@ -62,20 +67,32 @@ const accessWebContentFunctionDeclaration = {
 const handleEmailFunctionDeclaration = {
     name: "handleEmail",
     parameters: {
-        type: "OBJECT",
-        description: "Handles an email by improving the subject, extracting dates, and categorizing it.",
+        type: FunctionDeclarationSchemaType.OBJECT,
+        description: "Handle an email by improving the subject, extracting dates, and categorizing it.",
         properties: {
             subject: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: "Improved email subject using information from the email."
             },
             datetimeInfo: {
-                type: "STRING",
-                description: `JSON String with an array of objects with important datetimes, types, and names in the email.
-                              (for eg. [{type: 'deadline', name: 'rent payment', datetime:'04/08/2024 12:30PM MST'}]).`
+                type: FunctionDeclarationSchemaType.ARRAY,
+                description: `Array of objects containing only important datetimes in the email with their labels.`,
+                items: {
+                    type: FunctionDeclarationSchemaType.OBJECT,
+                    properties: {
+                        label: {
+                            type: FunctionDeclarationSchemaType.STRING,
+                            description: "Label for the datetime (for eg. 'Rent Due Date' or 'Event Date')"
+                        },
+                        datetime: {
+                            type: FunctionDeclarationSchemaType.STRING,
+                            description: "Datetime info (for eg. '04/08/2024 12:30PM MST'"
+                        }
+                    }
+                }
             },
             category: {
-                type: "STRING",
+                type: FunctionDeclarationSchemaType.STRING,
                 description: "Name of category to classify email into: can be 'work', 'financial', 'personal', 'social', and 'promo' (for promotions/newsletters)."
             }
         },
@@ -86,11 +103,11 @@ const handleEmailFunctionDeclaration = {
 const saveMemoriesFunctionDeclaration = {
     name: "saveMemories",
     parameters: {
-        type: "OBJECT",
+        type: FunctionDeclarationSchemaType.OBJECT,
         description: "Extracts content to be saved as memories to help with personalization, recommendations, and direct requests.",
         properties: {
         memories: {
-            type: "STRING",
+            type: FunctionDeclarationSchemaType.STRING,
             description: "Content to be saved as memory.",
         },
         },

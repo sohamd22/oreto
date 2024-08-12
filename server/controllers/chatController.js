@@ -60,6 +60,7 @@ const initializeChat = (user) => {
   currentUser = user;
 }
 
+// Functions
 const functions = {
   accessWebContent: async ({ link, prompt }) => {
     const browser = await puppeteer.launch({
@@ -103,9 +104,9 @@ const responseHandler = async (prompt) => {
 
     const call = result.response.functionCalls() ? result.response.functionCalls()[0] : null;
 
-    if (call) {      
+    if (call) {            
       for (const property in call.args) {
-        call.args[property] = call.args[property].replace(/\\/g, '');
+        if (typeof call.args[property] == "string") call.args[property] = call.args[property].replace(/\\/g, '');
       }
 
       if (call.name in functions) {

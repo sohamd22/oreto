@@ -20,6 +20,7 @@ const PromptHandler = ({ functions, additionalButtons, placeholder }) => {
             
             if (data.name) functions[data.name](data.args);
             functions.setResponse(data.response);
+            functions.setFeedbackGiven(false);
         }
         else {
             functions.setResponse("Sorry, there was an error.");

@@ -17,6 +17,7 @@ const Dashboard = () => {
     const [user, setUser] = useState({});
 
     const [response, setResponse] = useState('');
+    const [feedbackGiven, setFeedbackGiven] = useState(false);
 
     const [lists, setLists] = useState([]);
     const listColors = ['green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'];
@@ -48,13 +49,12 @@ const Dashboard = () => {
     const functions = {
         activateTab: ({ tab }) => activateTab(tab),
 
-        createList: async ({name="My List", items="[]", backgroundColor}) => {
+        createList: async ({name="My List", items=[], backgroundColor}) => {
             if (!backgroundColor) {
                 backgroundColor = listColors[Math.floor(Math.random() * listColors.length)];
                 console.log(backgroundColor);
             }
             backgroundColor = `bg-${backgroundColor}-600`;
-            items = JSON.parse(items);
             const listsUpdated = [{name, items, backgroundColor}, ...lists];
             setLists(listsUpdated);
             activateTab("lists");
@@ -62,6 +62,8 @@ const Dashboard = () => {
         },
             
         setResponse,
+
+        setFeedbackGiven
     }
 
     const Logout = useCallback(() => {
@@ -90,7 +92,7 @@ const Dashboard = () => {
     }, [cookies, navigate, Logout]);
     
     const tabComponents = {
-        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,
+        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} feedbackGiven={feedbackGiven} functions={functions} />,
         "emails": <Emails emails={emails} />,
         "lists": <Lists lists={lists} createList={functions.createList} />,
     }
