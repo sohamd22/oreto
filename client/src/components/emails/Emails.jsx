@@ -3,6 +3,8 @@ import PromptHandler from "../PromptHandler";
 import Email from "./Email";
 import PropTypes from "prop-types";
 
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 const Emails = ({ emails }) => {
     const [activeTab, setActiveTab] = useState('work');
 
@@ -22,7 +24,7 @@ const Emails = ({ emails }) => {
 
     return (
         <div className="h-full w-full py-8 pr-12 flex flex-col gap-12">
-            <h2 className="relative w-fit merriweather font-light text-3xl leading-tight tracking-wide text-gray-300 before:absolute before:h-[1px] before:w-3/4 before:bg-gradient-to-r before:from-indigo-500 before:to-violet-500 before:-bottom-2">Your <mark className="bg-transparent text-white font-normal">sorted emails</mark> this week.</h2>
+            <h2 className="relative w-fit merriweather font-light text-3xl leading-tight tracking-wide text-gray-300 before:absolute before:h-[1px] before:w-3/4 before:bg-gradient-to-r before:from-indigo-500 before:to-violet-500 before:-bottom-2">Your <mark className="bg-transparent text-white font-normal">sorted emails</mark>.</h2>
             
             <div className="flex gap-4">
                 <button data-key="work" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-blue-600 rounded-md border-l-2">Work</button>
@@ -35,7 +37,16 @@ const Emails = ({ emails }) => {
             <div className="flex flex-col max-h-full overflow-y-auto overflow-x-hidden pr-5">
                 { emails[activeTab].map(email => {
                     const date = new Date(email.datetime);
-                    return <Email key={email.id} sender={email.sender.split(' <')[0]} subject={email.subject} datetime={`${date.getDate()}/${date.getMonth() + 1}`} />
+                    const currentDate = new Date();
+                    let dateText;
+                    
+                    if (Math.floor((currentDate - date)/1000) <= (currentDate.getHours() * 3600 + currentDate.getMinutes() * 60 + currentDate.getSeconds())) {
+                        dateText = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+                    }
+                    else {
+                        dateText = `${String(date.getDate()).padStart(2, "0")} ${months[date.getMonth()]}`;
+                    }
+                    return <Email key={email.id} sender={email.sender.split(' <')[0]} subject={email.subject} datetime={dateText} />
                   }) }
             </div>
             

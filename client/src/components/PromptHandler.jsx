@@ -19,11 +19,10 @@ const PromptHandler = ({ functions, additionalButtons, placeholder }) => {
             textArea.style.height = 'inherit';
             
             if (data.name) functions[data.name](data.args);
-            functions.setResponse(data.response);
-            functions.setFeedbackGiven(false);
+            functions.setResponse({text: data.response, feedbackGiven: false});
         }
         else {
-            functions.setResponse("Sorry, there was an error.");
+            functions.setResponse({text: "Sorry, there was an error.", feedbackGiven: false});
         }
     }
 

@@ -16,8 +16,10 @@ const Dashboard = () => {
     const [cookies, removeCookie] = useCookies([]);
     const [user, setUser] = useState({});
 
-    const [response, setResponse] = useState('');
-    const [feedbackGiven, setFeedbackGiven] = useState(false);
+    const [response, setResponse] = useState({
+        text: '',
+        feedbackGiven: false
+    });
 
     const [lists, setLists] = useState([]);
     const listColors = ['green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'];
@@ -61,9 +63,7 @@ const Dashboard = () => {
             await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email: user.email });
         },
             
-        setResponse,
-
-        setFeedbackGiven
+        setResponse
     }
 
     const Logout = useCallback(() => {
@@ -92,7 +92,7 @@ const Dashboard = () => {
     }, [cookies, navigate, Logout]);
     
     const tabComponents = {
-        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} feedbackGiven={feedbackGiven} functions={functions} />,
+        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,
         "emails": <Emails emails={emails} />,
         "lists": <Lists lists={lists} createList={functions.createList} />,
     }

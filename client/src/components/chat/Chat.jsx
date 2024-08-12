@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import Response from "./Response";
 import PromptHandler from "../PromptHandler";
 
-const Chat = ({ name, response, feedbackGiven, functions }) => {
+const Chat = ({ name, response, functions }) => {
     const hourOfDay = (new Date()).getHours();
     const timeOfDay = hourOfDay < 12 ? "Morning" : (hourOfDay < 17 ? "Afternoon" : "Evening");
 
@@ -13,7 +13,7 @@ const Chat = ({ name, response, feedbackGiven, functions }) => {
             </div>
 
             <div className="mt-auto"></div>
-            <Response content={response} feedbackGiven={feedbackGiven} setFeedbackGiven={functions.setFeedbackGiven} />
+            <Response response={response} setResponse={functions.setResponse} />
             <PromptHandler functions={functions} placeholder="Tell me about ..."/>
         </div>
     );
@@ -22,7 +22,6 @@ const Chat = ({ name, response, feedbackGiven, functions }) => {
 Chat.propTypes = {
     name: PropTypes.string.isRequired,
     response: PropTypes.string.isRequired,
-    feedbackGiven: PropTypes.bool.isRequired,
     functions: PropTypes.object.isRequired,
 }
 

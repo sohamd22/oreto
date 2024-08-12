@@ -52,7 +52,9 @@ const initializeChat = (user) => {
             Please do not use the backslash (\\) character in your responses.
 
             If a prompt has the characters ~~ in it, that signifies additional server added info for you to remember, 
-            it was not added by the user so do not mention it in front of them.` 
+            it was not added by the user so do not mention it in front of them.
+            
+            The current user's name is ${user.name}.` 
         }],
       }]
   });
@@ -104,7 +106,9 @@ const responseHandler = async (prompt) => {
 
     const call = result.response.functionCalls() ? result.response.functionCalls()[0] : null;
 
-    if (call) {            
+    if (call) {         
+      console.log(call);
+         
       for (const property in call.args) {
         if (typeof call.args[property] == "string") call.args[property] = call.args[property].replace(/\\/g, '');
       }
@@ -113,7 +117,8 @@ const responseHandler = async (prompt) => {
         return functions[call.name](call.args);
       }
       else {
-        return {name: call.name, args: call.args, response: result.response.text().replace('\\', '')};
+        const response = result.response.text();
+        return {name: call.name, args: call.args, response: response ? response.replace('\\', '') : "Okay, I will help you with that."};
       }      
     }
     else {
