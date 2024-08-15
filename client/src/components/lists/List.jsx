@@ -46,7 +46,7 @@ const List = ({ list, deleteList, updateList }) => {
 }
 
 List.propTypes = {
-    list: PropTypes.array.isRequired,
+    list: PropTypes.object.isRequired,
     deleteList: PropTypes.func.isRequired,
     updateList: PropTypes.func.isRequired
 }
