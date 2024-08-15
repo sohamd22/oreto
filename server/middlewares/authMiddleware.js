@@ -42,6 +42,7 @@ const checkEmails = async (user) => {
     })).data;
 
     const date = parseInt(message.internalDate);
+    const labels = message.labelIds.join();
 
     const headers = message.payload.headers;
     const sender = headers.find(header => header.name == "From").value;
@@ -56,7 +57,8 @@ const checkEmails = async (user) => {
     });
 
     const prompt = 
-    `Call the handleEmail function to improve the subject, extract important datetimes, and categorize the following email:
+    `Call the handleEmail function to extract important datetimes and categorize the following email:
+    Labels: ${labels}
     Sender: ${sender}
     Subject: ${subject}
     Body: ${body}`;
@@ -67,12 +69,10 @@ const checkEmails = async (user) => {
       id,
       sender,
       datetime: date,
-      subject: result?.subject,
+      subject,
       category: result?.category,
       bodyDatetimes: result?.datetime
-    }
-
-    
+    }    
 
     emailCategories[result?.category].push(email);
   };

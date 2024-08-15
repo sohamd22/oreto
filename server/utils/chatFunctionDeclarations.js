@@ -68,25 +68,21 @@ const handleEmailFunctionDeclaration = {
     name: "handleEmail",
     parameters: {
         type: FunctionDeclarationSchemaType.OBJECT,
-        description: "Handle an email by improving the subject, extracting dates, and categorizing it.",
+        description: "Handle an email by extracting dates from it and categorizing it.",
         properties: {
-            subject: {
-                type: FunctionDeclarationSchemaType.STRING,
-                description: "Improved email subject using information from the email."
-            },
             datetimeInfo: {
                 type: FunctionDeclarationSchemaType.ARRAY,
-                description: `Array of objects containing only important datetimes in the email with their labels.`,
+                description: `Array of objects containing important datetimes in the email with their labels.`,
                 items: {
                     type: FunctionDeclarationSchemaType.OBJECT,
                     properties: {
                         label: {
                             type: FunctionDeclarationSchemaType.STRING,
-                            description: "Label for the datetime (for eg. 'Rent Due Date' or 'Event Date')"
+                            description: "Label for the datetime (for eg. 'The rent is due on', 'The <name> event is on', 'Finish <task> by', etc.)"
                         },
                         datetime: {
                             type: FunctionDeclarationSchemaType.STRING,
-                            description: "Datetime info (for eg. '04/08/2024 12:30PM MST'"
+                            description: "Datetime info (for eg. '04/08/2024 12:30PM MST')"
                         }
                     }
                 }
@@ -96,7 +92,7 @@ const handleEmailFunctionDeclaration = {
                 description: "Name of category to classify email into: can be 'work', 'financial', 'personal', 'social', and 'promo' (for promotions/newsletters)."
             }
         },
-        required: ["subject", "category"],
+        required: ["category"],
     }
 };
   

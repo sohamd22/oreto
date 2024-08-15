@@ -57,10 +57,24 @@ const Dashboard = () => {
                 console.log(backgroundColor);
             }
             backgroundColor = `bg-${backgroundColor}-600`;
-            const listsUpdated = [{name, items, backgroundColor}, ...lists];
+            const id = lists.length ? lists[lists.length - 1].id + 1 : 0;
+            const listsUpdated = [{id, name, items, backgroundColor}, ...lists];
             setLists(listsUpdated);
             activateTab("lists");
             await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email: user.email });
+        },
+
+        deleteList: async (listId) => {
+            const listsUpdated = lists.filter(list => list.id != listId);
+            setLists(listsUpdated);
+            await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email: user.email });
+        },
+
+        updateList: async (listId, newList) => {
+            const listsUpdated = [...lists];
+            listsUpdated[listsUpdated.findIndex(list => list.id == listId)] = newList;
+            setLists(listsUpdated);
+            await axios.post("http://localhost:3000/lists/save", { lists: listsUpdated, email: user.email })
         },
             
         setResponse
@@ -94,7 +108,7 @@ const Dashboard = () => {
     const tabComponents = {
         "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,
         "emails": <Emails emails={emails} />,
-        "lists": <Lists lists={lists} createList={functions.createList} />,
+        "lists": <Lists lists={lists} createList={functions.createList} deleteList={functions.deleteList} updateList={functions.updateList} />,
     }
 
     return (

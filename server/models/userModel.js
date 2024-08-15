@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
+import encrypt from "mongoose-encryption";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -11,12 +15,8 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {
-        type: String,
-    },
     google: {
         id: String,
-        email: String,
         tokens: {}
     },
     data: {
@@ -44,5 +44,7 @@ userSchema.pre("save", async function () {
         this.password = await bcrypt.hash(this.password, 12);
     }
 });
+
+userSchema.plugin(encrypt, { secret: process.env.ENCRYPTION_SECRET });
 
 export default mongoose.model("User", userSchema);

@@ -23,6 +23,7 @@
     "mem0ai": "^1.0.1",
     "mongo": "^0.1.0",
     "mongoose": "^8.5.2",
+    "mongoose-encryption": "^2.1.2",
     "nodemon": "^3.1.4",
     "puppeteer": "^22.15.0"
   },

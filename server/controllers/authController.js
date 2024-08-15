@@ -76,18 +76,10 @@ const GoogleAuth = async (req, res, next) => {
     const { name, email, sub } = jwtDecode(tokens.id_token);
 
     let user = await User.findOne({ email });
-    if (user) {
-      if (!user.google.id) {
-        user.google.id = sub;
-        user.google.email = email;
-        user.save();
-      }
-    }
-    else {
+    if (!user) {
       user = await User.create({ name, email, google: {
         id: sub,
-        email
-      }})
+      }});
     }
 
     user.google.tokens = tokens;
