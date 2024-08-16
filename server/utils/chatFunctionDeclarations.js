@@ -72,13 +72,13 @@ const handleEmailFunctionDeclaration = {
         properties: {
             datetimeInfo: {
                 type: FunctionDeclarationSchemaType.ARRAY,
-                description: `Array of objects containing important datetimes in the email with their labels.`,
+                description: `Array of objects containing important datetimes in the email and descriptions for them.`,
                 items: {
                     type: FunctionDeclarationSchemaType.OBJECT,
                     properties: {
-                        label: {
+                        description: {
                             type: FunctionDeclarationSchemaType.STRING,
-                            description: "Descriptive label for the datetime (for eg. 'The rent for ABC Apartments is due on', 'The <name> event at ABC Location is on', 'Finish <task> by', etc.)"
+                            description: "Very detailed description of the context of the datetime in the email (for eg. 'The monthly rent for ABC Apartments is due on', 'The <name> sports event at ABC Location is on', 'Finish <task> for work by', etc.)."
                         },
                         datetime: {
                             type: FunctionDeclarationSchemaType.STRING,
@@ -111,7 +111,7 @@ const saveReminderFunctionDeclaration = {
                 description: "Date to give the reminder (for eg. '14/08/2024 12:30PM MST', '07/09/2024', etc.)"
             }
         },
-        required: ["reminder", "date"],
+        required: ["reminder", "datetime"],
     }
 };
 
