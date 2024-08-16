@@ -31,6 +31,7 @@ const Dashboard = () => {
         social: [],
         promo: []
     });
+    const [reminders, setReminders] = useState([]);
 
     const [activeTab, setActiveTab] = useState("chat");
 
@@ -98,7 +99,8 @@ const Dashboard = () => {
                     ? 
                     (setUser(user),
                      setLists(user.lists),
-                     setEmails(user.emails)) 
+                     setEmails(user.emails),
+                     setReminders(user.reminders)) 
                     : 
                     (Logout());
         };
@@ -106,7 +108,7 @@ const Dashboard = () => {
     }, [cookies, navigate, Logout]);
     
     const tabComponents = {
-        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} functions={functions} />,
+        "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} reminders={reminders} functions={functions} />,
         "emails": <Emails emails={emails} />,
         "lists": <Lists lists={lists} createList={functions.createList} deleteList={functions.deleteList} updateList={functions.updateList} />,
     }

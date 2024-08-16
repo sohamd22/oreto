@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import { google } from "googleapis";
 import { initializeChat, responseHandler } from "../controllers/chatController.js";
+import saveReminder from "../utils/saveReminder.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -21,7 +22,7 @@ const checkEmails = async (user) => {
     q: user.data.emails.lastCheckTimeSeconds ? `after:${user.data.emails.lastCheckTimeSeconds}` : ""
   });
   const messages = user.data.emails.lastCheckTimeSeconds ? result.data.messages : result.data.messages.slice(0, 10);
-  user.data.emails.lastCheckTimeSeconds = Math.floor(new Date().getTime() / 1000);
+  const lastCheckTimeSeconds = Math.floor(new Date().getTime() / 1000);
 
   const emailCategories = {
     work: [],
@@ -41,7 +42,7 @@ const checkEmails = async (user) => {
       id
     })).data;
 
-    const date = parseInt(message.internalDate);
+    const datetime = parseInt(message.internalDate);
     const labels = message.labelIds.join();
 
     const headers = message.payload.headers;
@@ -59,27 +60,40 @@ const checkEmails = async (user) => {
     const prompt = 
     `Call the handleEmail function to extract important datetimes and categorize the following email:
     Labels: ${labels}
+    Sent On: ${(new Date(datetime)).toString()}
     Sender: ${sender}
     Subject: ${subject}
     Body: ${body}`;
 
     const result = (await responseHandler(prompt)).args;
+    const {category, datetimeInfo} = result;
     
     const email = {
       id,
       sender,
-      datetime: date,
+      datetime,
       subject,
-      category: result?.category,
-      bodyDatetimes: result?.datetime
+      category,
+      datetimeInfo
+    }
+
+    if (datetimeInfo) {
+      for (const datetime of datetimeInfo) {
+        const reminder = {
+          reminder: datetime.label,
+          datetime: datetime
+        }
+        await saveReminder(reminder, user);
+      }
     }    
 
-    emailCategories[result?.category].push(email);
+    emailCategories[category].push(email);
   };
   Object.keys(emailCategories).forEach((key, _) => {
     emailCategories[key] = [...emailCategories[key], ...user.data.emails.categories[key]]
   });
   user.data.emails.categories = emailCategories;
+  user.data.emails.lastCheckTimeSeconds =  lastCheckTimeSeconds;
   await user.save();
 }
 
@@ -119,7 +133,7 @@ const userVerification = async (req, res) => {
         initializeChat(user);
         await checkEmails(user);
 
-        return res.json({ status: true, user: {name: user.name, email: user.email, emails: user.data.emails.categories, lists: user.data.lists }});
+        return res.json({ status: true, user: {name: user.name, email: user.email, emails: user.data.emails.categories, lists: user.data.lists, reminders: user.data.reminders }});
       }
       else {
         return res.json({ status: false });

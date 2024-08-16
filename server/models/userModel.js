@@ -31,7 +31,8 @@ const userSchema = new mongoose.Schema({
                 social: [],
                 promo: []
             }
-        }
+        },
+        reminders: []
     },  
     createdAt: {
         type: Date,

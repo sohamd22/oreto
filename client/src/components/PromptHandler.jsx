@@ -6,10 +6,12 @@ import { MdSend } from "react-icons/md";
 const PromptHandler = ({ functions, additionalButtons, placeholder }) => {
     const [prompt, setPrompt] = useState('');
 
+    const date = new Date();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const response = await axios.post("http://localhost:3000/chat", { prompt });
+        
+        const response = await axios.post("http://localhost:3000/chat", { prompt: `${prompt}\n~~Current date (DD/MM/YYYY): ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}.` });
         const data = response.data;
 
         if (data) {

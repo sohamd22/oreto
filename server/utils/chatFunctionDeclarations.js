@@ -78,11 +78,11 @@ const handleEmailFunctionDeclaration = {
                     properties: {
                         label: {
                             type: FunctionDeclarationSchemaType.STRING,
-                            description: "Label for the datetime (for eg. 'The rent is due on', 'The <name> event is on', 'Finish <task> by', etc.)"
+                            description: "Descriptive label for the datetime (for eg. 'The rent for ABC Apartments is due on', 'The <name> event at ABC Location is on', 'Finish <task> by', etc.)"
                         },
                         datetime: {
                             type: FunctionDeclarationSchemaType.STRING,
-                            description: "Datetime info (for eg. '04/08/2024 12:30PM MST')"
+                            description: "Datetime info (for eg. '14/08/2024 12:30PM MST')"
                         }
                     }
                 }
@@ -96,19 +96,23 @@ const handleEmailFunctionDeclaration = {
     }
 };
   
-const saveMemoriesFunctionDeclaration = {
-    name: "saveMemories",
+const saveReminderFunctionDeclaration = {
+    name: "saveReminder",
     parameters: {
         type: FunctionDeclarationSchemaType.OBJECT,
-        description: "Extracts content to be saved as memories to help with personalization, recommendations, and direct requests.",
+        description: "Saves a reminder with the given date and/or time.",
         properties: {
-        memories: {
-            type: FunctionDeclarationSchemaType.STRING,
-            description: "Content to be saved as memory.",
+            reminder: {
+                type: FunctionDeclarationSchemaType.STRING,
+                description: "The reminder.",
+            },
+            datetime: {
+                type: FunctionDeclarationSchemaType.STRING,
+                description: "Date to give the reminder (for eg. '14/08/2024 12:30PM MST', '07/09/2024', etc.)"
+            }
         },
-        },
-        required: ["memories"],
+        required: ["reminder", "date"],
     }
 };
 
-export default [ activateTabFunctionDeclaration, createListFunctionDeclaration, accessWebContentFunctionDeclaration, handleEmailFunctionDeclaration ];
+export default [ activateTabFunctionDeclaration, createListFunctionDeclaration, accessWebContentFunctionDeclaration, handleEmailFunctionDeclaration, saveReminderFunctionDeclaration ];
