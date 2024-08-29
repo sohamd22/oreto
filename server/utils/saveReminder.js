@@ -12,9 +12,9 @@ const reminderColors =
 
 const saveReminder = async (reminder, user) => {
     reminder.backgroundColor = reminderColors[Math.floor(Math.random() * reminderColors.length)];
-    user.data.reminders = [...user.data.reminders, reminder];
 
-    user.data.reminders.sort((a, b) => {
+    const reminders = [...user.data.reminders, reminder];
+    reminders.sort((a, b) => {
         const dateA = new Date(a.datetime);
         const dateB = new Date(b.datetime);
 
@@ -23,9 +23,10 @@ const saveReminder = async (reminder, user) => {
         return 0;
     });
 
+    user.data.reminders = reminders;
       
     await user.save();
-    return { response: "I've saved that reminder for you!"}
+    return { response: "I've saved that reminder for you!" }
 }
 
 export default saveReminder;
