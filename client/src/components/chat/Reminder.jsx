@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 const Reminder = ({ content, backgroundColor }) => {    
     return (
-        <div className={`p-4 rounded-md flex ${backgroundColor} text-gray-200 font-medium`}>
+        <div className={`p-4 rounded-md max-w-72 flex ${backgroundColor} text-gray-200 font-medium`}>
             {content}
         </div>
     );
