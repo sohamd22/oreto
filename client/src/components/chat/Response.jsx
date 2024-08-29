@@ -26,7 +26,7 @@ const Response = ({ response, setResponse }) => {
     return (
         response.text
         ?
-        <div className="max-h-full overflow-x-hidden flex gap-5">
+        <div className="h-full overflow-x-hidden flex gap-5">
             <img src="/images/oreto-profile.png" alt="Oreto" className="aspect-square h-12 rounded-full border-2 border-gray-400" />
             <div className="pr-5 overflow-y-auto w-full flex flex-col gap-2">
                 <p className="leading-relaxed text-gray-200 text-lg">

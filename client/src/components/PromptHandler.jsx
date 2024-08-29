@@ -11,7 +11,7 @@ const PromptHandler = ({ functions, additionalButtons, placeholder }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         
-        const response = await axios.post("http://localhost:3000/chat", { prompt: `${prompt}\n~~Current date (DD/MM/YYYY): ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}.` });
+        const response = await axios.post("http://localhost:3000/chat", { prompt: `${prompt}\n~~Current date ${date.toString()}.` });
         const data = response.data;
 
         if (data) {

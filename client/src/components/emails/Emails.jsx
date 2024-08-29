@@ -5,10 +5,10 @@ import PropTypes from "prop-types";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const Emails = ({ emails }) => {
-    const [activeTab, setActiveTab] = useState('work');
+const Emails = ({ emails, functions }) => {
+    const [activeEmailTab, setactiveEmailTab] = useState('work');
 
-    const activateTab = (event) => {
+    const activateEmailTab = (event) => {
         const selectedTab = event.currentTarget;
         const tabs = Array.from(selectedTab.parentNode.children);
 
@@ -19,23 +19,23 @@ const Emails = ({ emails }) => {
 
         selectedTab.classList.remove("opacity-40");
         selectedTab.classList.add("border-l-2")
-        setActiveTab(selectedTab.dataset.key);
+        setactiveEmailTab(selectedTab.dataset.key);
     }
 
     return (
         <div className="h-full w-full py-8 pr-12 flex flex-col gap-12">
-            <h2 className="relative w-fit merriweather font-light text-3xl leading-tight tracking-wide text-gray-300 before:absolute before:h-[1px] before:w-3/4 before:bg-gradient-to-r before:from-indigo-500 before:to-violet-500 before:-bottom-2">Your <mark className="bg-transparent text-white font-normal">sorted emails</mark>.</h2>
+            <h2 className="relative w-fit merriweather font-light text-3xl leading-tight tracking-wide text-gray-300 before:absolute before:h-[1px] before:w-3/4 before:bg-gradient-to-r before:from-indigo-500 before:to-violet-500 before:-bottom-2">Your <mark className="bg-transparent text-white font-normal">categorized emails</mark>.</h2>
             
             <div className="flex gap-4">
-                <button data-key="work" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-blue-600 rounded-md border-l-2">Work</button>
-                <button data-key="financial" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-green-600 rounded-md opacity-40">Financial</button>
-                <button data-key="personal" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-purple-600 rounded-md opacity-40">Personal</button>
-                <button data-key="social" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-rose-600 rounded-md opacity-40">Social</button>
-                <button data-key="promo" onClick={(event) => activateTab(event)} className="px-5 py-2 bg-yellow-600 rounded-md opacity-40">Promo/News</button>
+                <button data-key="work" onClick={(event) => activateEmailTab(event)} className="px-5 py-2 bg-blue-600 rounded-md border-l-2">Work</button>
+                <button data-key="financial" onClick={(event) => activateEmailTab(event)} className="px-5 py-2 bg-green-600 rounded-md opacity-40">Financial</button>
+                <button data-key="personal" onClick={(event) => activateEmailTab(event)} className="px-5 py-2 bg-purple-600 rounded-md opacity-40">Personal</button>
+                <button data-key="social" onClick={(event) => activateEmailTab(event)} className="px-5 py-2 bg-rose-600 rounded-md opacity-40">Social</button>
+                <button data-key="promo" onClick={(event) => activateEmailTab(event)} className="px-5 py-2 bg-yellow-600 rounded-md opacity-40">Promo/News</button>
             </div>
 
             <div className="flex flex-col max-h-full overflow-y-auto overflow-x-hidden pr-5">
-                { emails[activeTab].map(email => {
+                { emails[activeEmailTab].map(email => {
                     const date = new Date(email.datetime);
                     const currentDate = new Date();
                     let dateText;
@@ -51,20 +51,14 @@ const Emails = ({ emails }) => {
             </div>
             
             <div className="mt-auto"></div>
-            <PromptHandler placeholder="Sort my emails by ..." />
+            <PromptHandler functions={functions} placeholder="Help me with the email about..." />
         </div>
     );
 }
 
 Emails.propTypes = {
     emails: PropTypes.object.isRequired,
+    functions: PropTypes.object.isRequired,
 }
-
-// Work
-// Personal
-// Financial
-// Social
-// Promotions/Newsletters
-// Each one can have a deadline tag, action required tag, reference tag
 
 export default Emails;

@@ -22,7 +22,17 @@ const Dashboard = () => {
     });
 
     const [lists, setLists] = useState([]);
-    const listColors = ['green', 'lime', 'yellow', 'blue', 'rose', 'violet', 'indigo', 'cyan'];
+    const listColors = 
+    [
+    'bg-green-600',
+    'bg-lime-600', 
+    'bg-yellow-600',
+    'bg-blue-600',
+    'bg-rose-600', 
+    'bg-violet-600', 
+    'bg-indigo-600', 
+    'bg-cyan-600'
+    ];
 
     const [emails, setEmails] = useState({
         work: [],
@@ -55,9 +65,10 @@ const Dashboard = () => {
         createList: async ({name="My List", items=[], backgroundColor}) => {
             if (!backgroundColor) {
                 backgroundColor = listColors[Math.floor(Math.random() * listColors.length)];
-                console.log(backgroundColor);
             }
-            backgroundColor = `bg-${backgroundColor}-600`;
+            else {
+                backgroundColor = `bg-${backgroundColor}-600`;
+            }            
             const id = lists.length ? lists[lists.length - 1].id + 1 : 0;
             const listsUpdated = [{id, name, items, backgroundColor}, ...lists];
             setLists(listsUpdated);
@@ -109,8 +120,8 @@ const Dashboard = () => {
     
     const tabComponents = {
         "chat": <Chat name={user?.name?.split(' ')[0] || ''} response={response} reminders={reminders} functions={functions} />,
-        "emails": <Emails emails={emails} />,
-        "lists": <Lists lists={lists} createList={functions.createList} deleteList={functions.deleteList} updateList={functions.updateList} />,
+        "emails": <Emails emails={emails} functions={functions} />,
+        "lists": <Lists lists={lists} createList={functions.createList} deleteList={functions.deleteList} updateList={functions.updateList} functions={functions} />,
     }
 
     return (

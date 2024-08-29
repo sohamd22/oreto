@@ -21,9 +21,11 @@ const List = ({ list, deleteList, updateList }) => {
         list.items = listItemsUpdated;
         updateList(list);
     }
+
+    const classes = `relative ${backgroundColor} p-4 rounded-lg flex flex-col gap-4`;
     
     return (
-        <div className={`relative ${backgroundColor} p-4 rounded-lg flex flex-col gap-4`}>
+        <div className={classes}>
             <input type="text" value={listName} onInput={(event) => { setListName(event.target.value); list.name = event.target.value; updateList(list) }} className="font-medium text-xl underline bg-transparent focus:outline-none" />
             <ul className="flex flex-col gap-1">
                 {   

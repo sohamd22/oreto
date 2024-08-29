@@ -8,7 +8,7 @@ const activateTabFunctionDeclaration = {
         properties: {
             tab: {
                 type: FunctionDeclarationSchemaType.STRING,
-                description: "Name of tab to activate: can be 'emails' (to work with emails) or 'lists' (to view lists).",
+                description: "Name of tab to activate: can be 'emails' (to work with emails), 'lists' (to view lists), or 'chat' (for general chat).",
             },
         },
         required: ["tab"],
@@ -68,7 +68,7 @@ const handleEmailFunctionDeclaration = {
     name: "handleEmail",
     parameters: {
         type: FunctionDeclarationSchemaType.OBJECT,
-        description: "Handle an email by extracting dates from it and categorizing it.",
+        description: "Handle an email by extracting important dates (Due dates, Event dates, Reminder dates. NOT EMAIL SEND DATES OR OTHER UNIMPORTANT DATES) from it and categorizing it.",
         properties: {
             datetimeInfo: {
                 type: FunctionDeclarationSchemaType.ARRAY,
@@ -78,7 +78,7 @@ const handleEmailFunctionDeclaration = {
                     properties: {
                         description: {
                             type: FunctionDeclarationSchemaType.STRING,
-                            description: "Very detailed description of the context of the datetime in the email (for eg. 'The monthly rent for ABC Apartments is due on', 'The <name> sports event at ABC Location is on', 'Finish <task> for work by', etc.)."
+                            description: "Detailed description of the context of the datetime in the email (for eg. 'The monthly rent for ABC Apartments is due on', 'The <name> sports event at ABC Location is on', 'Finish <task> for work by', etc.)."
                         },
                         datetime: {
                             type: FunctionDeclarationSchemaType.STRING,
@@ -115,4 +115,19 @@ const saveReminderFunctionDeclaration = {
     }
 };
 
-export default [ activateTabFunctionDeclaration, createListFunctionDeclaration, accessWebContentFunctionDeclaration, handleEmailFunctionDeclaration, saveReminderFunctionDeclaration ];
+const displayResponseFunctionDeclaration = {
+    name: "displayResponse",
+    parameters: {
+        type: FunctionDeclarationSchemaType.OBJECT,
+        description: "Displays a response to the user.",
+        properties: {
+            response: {
+                type: FunctionDeclarationSchemaType.STRING,
+                description: "The response to show the user.",
+            },
+        },
+        required: ["response"],
+    }
+}
+
+export default [ activateTabFunctionDeclaration, createListFunctionDeclaration, accessWebContentFunctionDeclaration, handleEmailFunctionDeclaration, saveReminderFunctionDeclaration, displayResponseFunctionDeclaration ];

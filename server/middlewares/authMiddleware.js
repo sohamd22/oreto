@@ -78,14 +78,12 @@ const checkEmails = async (user) => {
     if (datetimeInfo) {
       for (const datetime of datetimeInfo) {
         const reminder = {
-          reminder: datetime.description,
+          reminder: `${sender}: ${datetime.description}`,
           datetime: datetime.datetime
         }
         await saveReminder(reminder, user);
       }
-    }  
-    
-    console.log(result);
+    }
 
     emailCategories[category].push(email);
   };
@@ -133,7 +131,7 @@ const userVerification = async (req, res) => {
         initializeChat(user);
         await checkEmails(user);
 
-        return res.json({ status: true, user: {name: user.name, email: user.email, emails: user.data.emails.categories, lists: user.data.lists, reminders: user.data.reminders }});
+        return res.json({ status: true, user: {name: user.name, email: user.email, emails: user.data.emails.categories, lists: user.data.lists, reminders: user.data.reminders.filter(reminder => 0 < new Date() - new Date(reminder.datetime) < 6.048e+8 )}});
       }
       else {
         return res.json({ status: false });

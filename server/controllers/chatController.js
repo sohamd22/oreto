@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import puppeteer from 'puppeteer';
 import functionDeclarations from "../utils/chatFunctionDeclarations.js";
-import saveReminder from "../utils/saveReminder.js";
+import saveReminderToDb from "../utils/saveReminder.js";
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ const generativeModel = genAI.getGenerativeModel({
     functionDeclarations,
   },
   generationConfig: {
-    temperature: 0.1
+    temperature: 1
   }
 });
 
@@ -86,7 +86,11 @@ const functions = {
   },
   
   saveReminder: async (reminder) => {
-    await saveReminder(reminder, currentUser);
+    return await saveReminderToDb(reminder, currentUser);
+  },
+
+  displayResponse: ({ response }) => {
+    return { name: "activateTab", args: {tab: "chat"}, response};
   }
 }
 
@@ -96,7 +100,6 @@ const responseHandler = async (prompt) => {
       return { response: "You need to login first." };
     }
     
-    const date = new Date();
     const result = await chat.sendMessage(prompt);
 
     currentUser.data.chatHistory = await chat.getHistory();
@@ -105,6 +108,7 @@ const responseHandler = async (prompt) => {
     const call = result.response.functionCalls() ? result.response.functionCalls()[0] : null;
 
     if (call) {                  
+      console.log(call);
       for (const property in call.args) {
         if (typeof call.args[property] == "string") call.args[property] = call.args[property].replace(/\\/g, '');
       }

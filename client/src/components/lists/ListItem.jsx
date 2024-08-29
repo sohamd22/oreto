@@ -16,7 +16,7 @@ const ListItem = ({ value, setValue, removeItem }) => {
     return (
         <li className="flex gap-2">
             <input type="checkbox" className="cursor-pointer" onClick={(event) => {checkboxHandler(event)}} />
-            <input type="text" value={value} onInput={(event) => { setValue(event.target.value) }} className="bg-transparent focus:outline-none" />
+            <input type="text" value={value} onInput={(event) => { setValue(event.target.value) }} className="bg-transparent focus:outline-none overflow-x-scroll" />
             <button onClick={removeItem} className="w-fit mt-2 opacity-90 leading-none text-xs">
                 x
             </button>
